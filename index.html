@@ -1,727 +1,2073 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NewsNexus- Avant-Garde News Experience</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.2/d3.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;700&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="NewsNexus — Editorial Intelligence. Where curated journalism meets machine intelligence.">
+<title>NewsNexus — Editorial Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        :root {
-            --primary-color: #FF6B6B;
-            --secondary-color: #4ECDC4;
-            --accent-color: #FFA500;
-            --background-color: #F7F7F7;
-            --text-color: #333333;
-        }
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        serif: ['Playfair Display', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'monospace'],
+      },
+      colors: {
+        ink: { 50:'#fafafa',100:'#f0f0f0',200:'#e0e0e0',300:'#c0c0c0',400:'#8a8a8a',500:'#6a6a6a',600:'#4a4a4a',700:'#2a2a2a',800:'#1a1a1a',900:'#0a0a0a' },
+        gold: { 50:'#faf8f3',100:'#f5f0e4',200:'#ebe0c8',300:'#d4c49a',400:'#c9a96e',500:'#b08d4b',600:'#8a6f3a' },
+      }
+    }
+  }
+}
+</script>
 
-        body {
-            font-family: 'Work Sans', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
+<style>
+/* ===== CSS VARIABLES & MOBILE-FIRST BASE ===== */
+:root {
+  --bg: #fafafa; --bg-sec: #ffffff; --bg-tert: #f0f0f0; --bg-glass: rgba(255,255,255,0.85);
+  --text: #1a1a1a; --text-sec: #4a4a4a; --text-muted: #8a8a8a; --text-inverse: #fafafa;
+  --border: #e0e0e0; --border-light: #f0f0f0;
+  --gold: #c9a96e; --gold-dim: #b08d4b; --gold-glow: rgba(201,169,110,0.15);
+  --red: #c0392b; --green: #27ae60;
+  --radius: 0px; --radius-sm: 0px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04); --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --header-h: 56px;
+  --touch-min: 44px;
+}
+.dark {
+  --bg: #0a0a0a; --bg-sec: #111111; --bg-tert: #1a1a1a; --bg-glass: rgba(17,17,17,0.92);
+  --text: #e8e8e8; --text-sec: #a0a0a0; --text-muted: #6a6a6a; --text-inverse: #1a1a1a;
+  --border: #2a2a2a; --border-light: #1a1a1a;
+  --gold-glow: rgba(201,169,110,0.08);
+  --shadow: 0 1px 3px rgba(0,0,0,0.2); --shadow-lg: 0 8px 32px rgba(0,0,0,0.3);
+}
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Space Mono', monospace;
-        }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
 
-        .neo-brutalist-element {
-            background-color: #ffffff;
-            border: 4px solid var(--text-color);
-            box-shadow: 8px 8px 0px var(--text-color);
-            transition: all 0.3s ease;
-        }
+* { -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s ease, color 0.5s ease; overflow-x: hidden; }
 
-        .neo-brutalist-element:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 12px 12px 0px var(--text-color);
-        }
+/* ===== SKIP LINK ===== */
+.skip-link { position: absolute; top: -40px; left: 0; background: var(--gold); color: var(--text-inverse); padding: 8px 16px; z-index: 10000; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; text-decoration: none; transition: top 0.3s; }
+.skip-link:focus { top: 0; }
 
-        .neo-brutalist-button {
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            border: 3px solid var(--text-color);
-            box-shadow: 4px 4px 0px var(--text-color);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
+/* ===== OFFLINE INDICATOR ===== */
+.offline-bar { position: fixed; top: 0; left: 0; right: 0; background: var(--red); color: white; text-align: center; padding: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; z-index: 9999; transform: translateY(-100%); transition: transform 0.3s ease; }
+.offline-bar.active { transform: translateY(0); }
 
-        .neo-brutalist-button:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--text-color);
-        }
+/* ===== READING PROGRESS ===== */
+#read-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--gold); z-index: 100; width: 0%; transition: width 0.1s linear; }
 
-        .gradient-text {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-        }
+/* ===== SECTION DOTS NAV ===== */
+.sec-dots { position: fixed; right: 12px; top: 50%; transform: translateY(-50%); z-index: 90; display: none; flex-direction: column; gap: 12px; }
+.sec-dots a { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--border); background: transparent; transition: var(--transition); position: relative; }
+.sec-dots a.active { background: var(--gold); border-color: var(--gold); transform: scale(1.3); }
+.sec-dots a::before { content: attr(data-label); position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.sec-dots a:hover::before { opacity: 1; }
+@media (min-width: 1024px) { .sec-dots { display: flex; } }
 
-        #news-globe {
-            width: 100%;
-            height: 500px;
-            background-color: var(--text-color);
-        }
+/* ===== BREAKING BANNER ===== */
+.breaking-banner { background: var(--red); color: white; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 0; overflow: hidden; white-space: nowrap; position: relative; z-index: 60; }
+.breaking-banner .track { display: inline-block; animation: ticker 30s linear infinite; }
+.breaking-banner .item { display: inline; padding: 0 24px; }
+.breaking-banner .item::before { content: '●'; margin-right: 8px; font-size: 0.4rem; vertical-align: middle; }
+@keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-        .news-card {
-            transition: all 0.3s ease;
-        }
+/* ===== NAVIGATION (MOBILE-FIRST) ===== */
+.nav-main { position: fixed; top: 28px; left: 0; right: 0; z-index: 50; background: var(--bg-glass); backdrop-filter: blur(20px) saturate(1.2); -webkit-backdrop-filter: blur(20px) saturate(1.2); border-bottom: 1px solid var(--border); transition: var(--transition); height: var(--header-h); display: flex; align-items: center; }
+.nav-main.scrolled { box-shadow: var(--shadow); height: 48px; }
+.nav-main.scrolled .nav-brand { font-size: 1.1rem; }
+.nav-brand { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.25rem; transition: font-size 0.3s ease; }
+.nav-link { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); padding: 4px 0; position: relative; transition: color 0.3s ease; }
+.nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.4s cubic-bezier(0.16,1,0.3,1); }
+.nav-link:hover, .nav-link.active { color: var(--text); }
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+.nav-btn { width: var(--touch-min); height: var(--touch-min); display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: color 0.3s; background: none; border: none; cursor: pointer; }
+.nav-btn:hover { color: var(--gold); }
+.nav-btn .badge { position: absolute; top: 6px; right: 6px; width: 14px; height: 14px; background: var(--red); color: white; font-size: 0.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; }
 
-        .news-card:hover {
-            transform: scale(1.05);
-        }
+/* Mobile bottom nav */
+@media (max-width: 1023px) {
+  .nav-main { top: 0; height: 52px; }
+  .nav-main.scrolled { height: 48px; }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-glass); backdrop-filter: blur(20px); border-top: 1px solid var(--border); z-index: 50; display: flex; justify-content: space-around; padding: 4px 0 8px; }
+  .bottom-nav a { display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: var(--text-muted); text-decoration: none; padding: 4px 8px; transition: color 0.3s; }
+  .bottom-nav a i { font-size: 1.1rem; margin-bottom: 2px; }
+  .bottom-nav a.active, .bottom-nav a:hover { color: var(--gold); }
+  body { padding-bottom: 64px; }
+}
+@media (min-width: 1024px) {
+  .bottom-nav { display: none; }
+  .nav-main { top: 28px; }
+  body { padding-bottom: 0; }
+}
 
-        .chart-container {
-            background-color: #ffffff;
-            border: 3px solid var(--text-color);
-            box-shadow: 8px 8px 0px var(--text-color);
-        }
+/* ===== HERO (MOBILE-FIRST) ===== */
+.hero-section { position: relative; min-height: 100svh; display: flex; align-items: flex-end; padding: 120px 0 48px; overflow: hidden; }
+#hero-canvas { position: absolute; inset: 0; z-index: 0; }
+.hero-content { position: relative; z-index: 10; width: 100%; }
+.hero-headline { font-family: 'Playfair Display', serif; font-weight: 900; font-size: clamp(2.5rem, 10vw, 7rem); line-height: 0.95; letter-spacing: -0.03em; }
+.hero-headline .char { display: inline-block; transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), color 0.3s ease; }
+.hero-headline .char:hover { transform: translateY(-6px); color: var(--gold); }
+.hero-sub { font-family: 'Inter', sans-serif; font-weight: 300; font-size: clamp(0.95rem, 2vw, 1.15rem); line-height: 1.7; color: var(--text-sec); max-width: 520px; margin-top: 20px; }
+.hero-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-top: 32px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.hero-meta .live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); animation: live-pulse 2s ease-in-out infinite; display: inline-block; margin-right: 6px; }
+@keyframes live-pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(192,57,43,0.4)} 50%{opacity:0.7;box-shadow:0 0 0 6px rgba(192,57,43,0)} }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.hero-cta button { min-height: var(--touch-min); padding: 0 28px; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: var(--transition); border: none; }
+.hero-cta .btn-primary { background: var(--text); color: var(--bg); }
+.hero-cta .btn-primary:hover { background: var(--gold); color: var(--text-inverse); }
+.hero-cta .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.hero-cta .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
 
-        #particle-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
+/* Hero cards - mobile: horizontal scroll, desktop: stacked */
+.hero-cards { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; margin-top: 32px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.hero-cards::-webkit-scrollbar { display: none; }
+.hero-cards .h-card { min-width: 260px; scroll-snap-align: start; background: var(--bg-glass); backdrop-filter: blur(16px); border: 1px solid var(--border); padding: 16px; transition: var(--transition); }
+.hero-cards .h-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+.hero-cards .h-card .cat { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.hero-cards .h-card .title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.9rem; line-height: 1.3; }
+.hero-cards .h-card .meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: var(--text-muted); margin-top: 8px; }
 
-        .scrolling-text {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            background-color: var(--text-color);
-            color: var(--background-color);
-            padding: 10px 0;
-        }
+@media (min-width: 1024px) {
+  .hero-section { align-items: center; padding: 140px 0 80px; }
+  .hero-cards { display: block; overflow: visible; margin-top: 0; }
+  .hero-cards .h-card { min-width: auto; margin-bottom: 12px; }
+  .hero-cards .h-card:last-child { margin-bottom: 0; }
+}
 
-        .scrolling-text-content {
-            display: inline-block;
-            white-space: nowrap;
-            animation: scrollText 30s linear infinite;
-        }
+/* ===== UTILITY BAR ===== */
+.utility-bar { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); padding: 8px 0; background: var(--bg-sec); overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.utility-bar::-webkit-scrollbar { display: none; }
+.utility-bar .u-item { display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; border-right: 1px solid var(--border); }
+.utility-bar .u-item:last-child { border-right: none; }
+.utility-bar .u-up { color: var(--green); }
+.utility-bar .u-down { color: var(--red); }
 
-        @keyframes scrollText {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+/* ===== STICKY SECTION HEADERS ===== */
+.sticky-header { position: sticky; top: var(--header-h); background: var(--bg-glass); backdrop-filter: blur(12px); z-index: 40; padding: 16px 0; border-bottom: 1px solid var(--border); transition: var(--transition); }
+@media (min-width: 1024px) { .sticky-header { top: calc(var(--header-h) + 28px); } }
 
-        .glitch-effect {
-            position: relative;
-            display: inline-block;
-        }
+/* ===== EDITORIAL CARDS ===== */
+.ed-card { background: var(--bg-sec); border: 1px solid var(--border); transition: var(--transition-slow); position: relative; overflow: hidden; }
+.ed-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform 0.6s ease; transform-origin: left; z-index: 2; }
+.ed-card:hover::before { transform: scaleX(1); }
+.ed-card:hover { transform: translateY(-3px); border-color: var(--gold-dim); box-shadow: var(--shadow-lg); }
+.ed-card .img-wrap { overflow: hidden; position: relative; aspect-ratio: 16/10; }
+.ed-card .img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+.ed-card:hover .img-wrap img { transform: scale(1.05); }
+.ed-card .img-wrap .skeleton-img { position: absolute; inset: 0; background: linear-gradient(90deg, var(--bg-tert) 25%, var(--border) 50%, var(--bg-tert) 75%); background-size: 200% 100%; animation: skel 1.5s ease-in-out infinite; }
+.ed-card .img-wrap img.loaded + .skeleton-img { display: none; }
+.ed-card .cat { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
+.ed-card .title { font-family: 'Playfair Display', serif; font-weight: 700; line-height: 1.25; transition: color 0.3s ease; }
+.ed-card:hover .title { color: var(--gold); }
+.ed-card .meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--text-muted); }
+.ed-card .desc { font-size: 0.85rem; line-height: 1.6; color: var(--text-sec); }
 
-        .glitch-effect::before,
-        .glitch-effect::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+/* 3D Tilt on desktop */
+@media (min-width: 1024px) and (hover: hover) {
+  .tilt-card { transform-style: preserve-3d; perspective: 1000px; }
+  .tilt-card .tilt-inner { transition: transform 0.3s ease; transform-style: preserve-3d; }
+}
 
-        .glitch-effect::before {
-            left: 2px;
-            text-shadow: -2px 0 var(--primary-color);
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
+/* ===== BENTO GRID ===== */
+.bento-grid { display: grid; gap: 12px; }
+.bento-grid .bento-item { position: relative; overflow: hidden; border: 1px solid var(--border); transition: var(--transition); }
+.bento-grid .bento-item:hover { border-color: var(--gold-dim); }
+.bento-grid .bento-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.bento-grid .bento-item:hover img { transform: scale(1.05); }
+.bento-grid .bento-item .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
+.bento-grid .bento-item .overlay .cat { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.bento-grid .bento-item .overlay .title { font-family: 'Playfair Display', serif; font-weight: 700; color: white; font-size: 1rem; line-height: 1.3; }
+.bento-grid .bento-item .overlay .meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: rgba(255,255,255,0.6); margin-top: 8px; }
 
-        .glitch-effect::after {
-            left: -2px;
-            text-shadow: -2px 0 var(--secondary-color);
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
+/* Mobile bento: 1 column */
+/* Tablet: 2 columns with spans */
+@media (min-width: 640px) {
+  .bento-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .bento-grid .bento-item:first-child { grid-column: span 2; }
+}
+/* Desktop: 3 columns with complex spans */
+@media (min-width: 1024px) {
+  .bento-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .bento-grid .bento-item:first-child { grid-column: span 2; grid-row: span 2; }
+  .bento-grid .bento-item:nth-child(4) { grid-column: span 2; }
+}
 
-        @keyframes glitch-anim {
-            0% { clip: rect(31px, 9999px, 94px, 0); }
-            20% { clip: rect(62px, 9999px, 42px, 0); }
-            40% { clip: rect(16px, 9999px, 78px, 0); }
-            60% { clip: rect(89px, 9999px, 5px, 0); }
-            80% { clip: rect(24px, 9999px, 53px, 0); }
-            100% { clip: rect(72px, 9999px, 97px, 0); }
-        }
-    </style>
+/* ===== HORIZONTAL SCROLL (MOBILE) ===== */
+.h-scroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 16px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.h-scroll::-webkit-scrollbar { display: none; }
+.h-scroll > * { scroll-snap-align: start; flex-shrink: 0; }
+@media (min-width: 1024px) {
+  .h-scroll { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; overflow: visible; }
+  .h-scroll > * { scroll-snap-align: none; }
+}
+
+/* ===== CATEGORY PILLS ===== */
+.cat-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.cat-pills::-webkit-scrollbar { display: none; }
+.cat-pill {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 10px 20px; border: 1px solid var(--border); background: transparent; color: var(--text-muted);
+  cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; white-space: nowrap;
+  min-height: var(--touch-min);
+}
+.cat-pill:hover, .cat-pill.active { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+.cat-pill.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--gold); }
+
+/* ===== CHARTS ===== */
+.chart-box { background: var(--bg-sec); border: 1px solid var(--border); padding: 24px; transition: var(--transition); }
+.chart-box:hover { border-color: var(--gold-dim); }
+@media (min-width: 768px) { .chart-box { padding: 32px; } }
+
+/* ===== TIMELINE ===== */
+.timeline-svg { width: 100%; height: 100%; min-height: 350px; }
+@media (min-width: 768px) { .timeline-svg { min-height: 400px; } }
+
+/* ===== MOST READ ===== */
+.most-read-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); transition: var(--transition); cursor: pointer; }
+.most-read-item:hover { padding-left: 8px; }
+.most-read-item:hover .mr-title { color: var(--gold); }
+.most-read-item:hover .mr-rank { color: var(--gold); }
+.most-read-item .mr-rank { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 900; color: var(--border); line-height: 1; min-width: 36px; transition: color 0.3s; }
+.most-read-item .mr-title { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 0.9rem; line-height: 1.3; transition: color 0.3s; }
+.most-read-item .mr-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: var(--text-muted); margin-top: 4px; }
+
+/* ===== LIVE BLOG ===== */
+.live-blog-item { position: relative; padding-left: 20px; padding-bottom: 20px; border-left: 1px solid var(--border); }
+.live-blog-item::before { content: ''; position: absolute; left: -3px; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.live-blog-item .lb-time { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--gold); margin-bottom: 4px; }
+.live-blog-item .lb-text { font-size: 0.85rem; color: var(--text-sec); line-height: 1.5; }
+.live-blog-item:last-child { border-left: none; padding-left: 0; }
+.live-blog-item:last-child::before { display: none; }
+
+/* ===== OPINION ===== */
+.opinion-card { background: var(--bg-sec); border: 1px solid var(--border); padding: 24px; position: relative; }
+.opinion-card::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--gold); opacity: 0.2; position: absolute; top: 4px; left: 16px; line-height: 1; }
+.opinion-quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; line-height: 1.5; color: var(--text); position: relative; z-index: 1; }
+.opinion-author { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+.opinion-author .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tert); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--gold); }
+@media (min-width: 768px) {
+  .opinion-card { padding: 32px; }
+  .opinion-card::before { font-size: 4rem; top: 8px; left: 20px; }
+  .opinion-quote { font-size: 1.25rem; }
+}
+
+/* ===== PODCAST ===== */
+.podcast-player { background: var(--bg-sec); border: 1px solid var(--border); padding: 20px; display: flex; align-items: center; gap: 16px; }
+.podcast-play { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--gold); background: transparent; color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); flex-shrink: 0; }
+.podcast-play:hover { background: var(--gold); color: var(--bg); }
+.podcast-wave { flex: 1; height: 32px; display: flex; align-items: center; gap: 2px; }
+.podcast-wave .bar { width: 2px; background: var(--border); border-radius: 1px; transition: all 0.3s ease; }
+.podcast-wave .bar.active { background: var(--gold); }
+@media (min-width: 768px) {
+  .podcast-player { padding: 24px; }
+  .podcast-play { width: 56px; height: 56px; }
+  .podcast-wave { height: 40px; gap: 3px; }
+  .podcast-wave .bar { width: 3px; }
+}
+
+/* ===== NEWSLETTER ===== */
+.newsletter-box { background: var(--bg-sec); border: 1px solid var(--border); padding: 32px; text-align: center; position: relative; overflow: hidden; }
+.newsletter-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+@media (min-width: 768px) { .newsletter-box { padding: 48px; } }
+
+/* ===== AI CHAT ===== */
+.chat-bubble { max-width: 85%; padding: 12px 16px; font-size: 0.85rem; line-height: 1.5; animation: bubble-in 0.4s cubic-bezier(0.16,1,0.3,1); }
+.chat-bubble.user { background: var(--text); color: var(--bg); border-radius: 16px 16px 4px 16px; margin-left: auto; }
+.chat-bubble.ai { background: var(--bg-tert); color: var(--text); border-radius: 16px 16px 16px 4px; border: 1px solid var(--border); }
+@keyframes bubble-in { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* ===== PHOTO MASONRY ===== */
+.masonry-grid { columns: 1; gap: 12px; }
+.masonry-item { break-inside: avoid; margin-bottom: 12px; position: relative; overflow: hidden; cursor: pointer; }
+.masonry-item img { width: 100%; display: block; transition: transform 0.6s ease; }
+.masonry-item:hover img { transform: scale(1.05); }
+.masonry-item .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 60%); opacity: 0; transition: opacity 0.4s ease; display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; }
+.masonry-item:hover .overlay { opacity: 1; }
+.masonry-item .overlay-text { color: white; font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1rem; }
+@media (min-width: 640px) { .masonry-grid { columns: 2; } }
+@media (min-width: 1024px) { .masonry-grid { columns: 3; gap: 16px; } .masonry-item { margin-bottom: 16px; } }
+
+/* ===== COMPARISON ===== */
+.compare-card { background: var(--bg-sec); border: 1px solid var(--border); padding: 24px; position: relative; overflow: hidden; }
+.compare-a { border-left: 3px solid var(--gold); }
+.compare-b { border-left: 3px solid var(--text-muted); }
+@media (min-width: 768px) { .compare-card { padding: 32px; } }
+
+/* ===== TRENDING CARDS ===== */
+.trend-card { min-width: 240px; padding: 20px; border: 1px solid var(--border); background: var(--bg-sec); transition: var(--transition); cursor: pointer; }
+.trend-card:hover { border-color: var(--gold-dim); }
+.trend-card .trend-rank { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--gold); margin-bottom: 8px; }
+.trend-card .trend-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; line-height: 1.3; margin-bottom: 8px; }
+.trend-card .trend-meta { font-size: 0.75rem; color: var(--text-muted); }
+.trend-card .trend-bar { height: 2px; background: var(--bg-tert); margin-top: 12px; }
+.trend-card .trend-bar .fill { height: 100%; background: var(--gold); transition: width 1s ease; }
+
+/* ===== POLL ===== */
+.poll-option { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--border); cursor: pointer; transition: var(--transition); margin-bottom: 8px; }
+.poll-option:hover { border-color: var(--gold-dim); background: var(--gold-glow); }
+.poll-option.selected { border-color: var(--gold); background: var(--gold-glow); }
+.poll-option .poll-radio { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: var(--transition); }
+.poll-option.selected .poll-radio { border-color: var(--gold); background: var(--gold); }
+.poll-option .poll-text { font-size: 0.85rem; flex: 1; }
+.poll-option .poll-bar-bg { flex: 1; height: 4px; background: var(--bg-tert); border-radius: 2px; overflow: hidden; }
+.poll-option .poll-bar-fill { height: 100%; background: var(--gold); transition: width 0.6s ease; }
+.poll-option .poll-pct { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); min-width: 36px; text-align: right; }
+
+/* ===== AUTHOR CARD ===== */
+.author-card { display: flex; align-items: center; gap: 16px; padding: 16px; border: 1px solid var(--border); background: var(--bg-sec); transition: var(--transition); }
+.author-card:hover { border-color: var(--gold-dim); }
+.author-card .author-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--bg-tert); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; color: var(--gold); flex-shrink: 0; }
+.author-card .author-name { font-weight: 600; font-size: 0.9rem; }
+.author-card .author-role { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.author-card .author-count { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--gold); margin-top: 2px; }
+
+/* ===== TOPIC CLUSTERS ===== */
+.topic-tag { display: inline-block; padding: 6px 14px; border: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 4px; transition: var(--transition); cursor: pointer; }
+.topic-tag:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+.topic-tag.hot { border-color: var(--gold); color: var(--gold); }
+
+/* ===== BACK TO TOP ===== */
+#back-to-top { position: fixed; bottom: 80px; right: 16px; width: 48px; height: 48px; border-radius: 50%; background: var(--bg-sec); border: 1px solid var(--border); color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 80; opacity: 0; transform: translateY(20px); transition: var(--transition); box-shadow: var(--shadow-lg); }
+#back-to-top.visible { opacity: 1; transform: translateY(0); }
+#back-to-top:hover { border-color: var(--gold); color: var(--gold); }
+#back-to-top svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+#back-to-top svg circle { fill: none; stroke: var(--gold); stroke-width: 2; stroke-dasharray: 126; stroke-dashoffset: 126; transition: stroke-dashoffset 0.1s linear; }
+@media (min-width: 1024px) { #back-to-top { bottom: 32px; right: 32px; } }
+
+/* ===== SHARE BUTTONS ===== */
+.share-group { display: flex; gap: 6px; }
+.share-btn { width: 36px; height: 36px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); font-size: 0.75rem; }
+.share-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ===== FOOTER ===== */
+.footer-main { background: var(--bg-sec); border-top: 1px solid var(--border); padding: 48px 0 24px; }
+@media (min-width: 768px) { .footer-main { padding: 64px 0 32px; } }
+.footer-col h5 { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+.footer-col a { display: block; font-size: 0.8rem; color: var(--text-sec); padding: 5px 0; transition: color 0.3s; text-decoration: none; }
+.footer-col a:hover { color: var(--gold); }
+
+/* ===== SKELETON ===== */
+.skeleton { background: linear-gradient(90deg, var(--bg-tert) 25%, var(--border) 50%, var(--bg-tert) 75%); background-size: 200% 100%; animation: skel 1.5s ease-in-out infinite; border-radius: 2px; }
+@keyframes skel { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ===== REVEAL ANIMATIONS ===== */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+.reveal-d4 { transition-delay: 0.4s; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ===== FOCUS VISIBLE ===== */
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* ===== MOBILE MENU ===== */
+#mobile-menu { position: fixed; inset: 0; z-index: 80; background: var(--bg); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); display: flex; flex-direction: column; }
+#mobile-menu.active { transform: translateX(0); }
+#mobile-menu .mobile-link { font-family: 'Playfair Display', serif; font-size: 1.75rem; padding: 12px 0; color: var(--text); text-decoration: none; transition: color 0.3s; border-bottom: 1px solid var(--border); }
+#mobile-menu .mobile-link:hover { color: var(--gold); }
+
+/* ===== SEARCH OVERLAY ===== */
+#search-overlay { position: fixed; inset: 0; z-index: 90; background: var(--bg); display: none; flex-direction: column; padding: 100px 24px 24px; }
+#search-overlay.active { display: flex; }
+#search-overlay input { width: 100%; font-family: 'Playfair Display', serif; font-size: 1.75rem; border: none; border-bottom: 2px solid var(--border); background: transparent; color: var(--text); outline: none; padding: 12px 0; }
+#search-overlay input:focus { border-bottom-color: var(--gold); }
+#search-overlay input::placeholder { color: var(--text-muted); opacity: 0.5; }
+@media (min-width: 768px) { #search-overlay input { font-size: 2.5rem; } }
+
+/* ===== COMMAND PALETTE ===== */
+#cmd-palette { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; align-items: flex-start; justify-content: center; padding-top: 15vh; }
+#cmd-palette.active { display: flex; }
+.cmd-box { background: var(--bg-sec); border: 1px solid var(--border); width: 100%; max-width: 600px; border-radius: 4px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.3); }
+.cmd-input { width: 100%; padding: 16px 20px; border: none; background: transparent; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; border-bottom: 1px solid var(--border); }
+.cmd-input::placeholder { color: var(--text-muted); }
+.cmd-item { padding: 10px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; border-bottom: 1px solid var(--border); }
+.cmd-item:hover { background: var(--bg-tert); }
+.cmd-item .cmd-icon { color: var(--text-muted); font-size: 0.85rem; }
+.cmd-item .cmd-text { font-size: 0.8rem; color: var(--text); }
+.cmd-item .cmd-kbd { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--text-muted); background: var(--bg-tert); padding: 2px 6px; border-radius: 3px; }
+
+/* ===== VOICE SEARCH BUTTON ===== */
+.voice-btn { width: var(--touch-min); height: var(--touch-min); border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+.voice-btn:hover { border-color: var(--gold); color: var(--gold); }
+.voice-btn.recording { border-color: var(--red); color: var(--red); animation: voice-pulse 1.5s ease-in-out infinite; }
+@keyframes voice-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,0.3)} 50%{box-shadow:0 0 0 8px rgba(192,57,43,0)} }
+
+/* ===== SECTION LABELS ===== */
+.sec-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.sec-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+.sec-label.center { justify-content: center; }
+.sec-label.center::before { width: 24px; }
+
+/* ===== HEADINGS ===== */
+h2.sec-title { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(1.75rem, 4vw, 3rem); line-height: 1.1; letter-spacing: -0.02em; }
+
+/* ===== CONTAINER ===== */
+.container-nx { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 640px) { .container-nx { padding: 0 24px; } }
+@media (min-width: 1024px) { .container-nx { padding: 0 32px; } }
+
+/* ===== SPACING ===== */
+.py-nx { padding-top: 64px; padding-bottom: 64px; }
+@media (min-width: 768px) { .py-nx { padding-top: 96px; padding-bottom: 96px; } }
+
+/* ===== GRID AUTO ===== */
+.auto-grid { display: grid; gap: 12px; }
+.auto-grid-2 { grid-template-columns: 1fr; }
+.auto-grid-3 { grid-template-columns: 1fr; }
+.auto-grid-4 { grid-template-columns: 1fr; }
+@media (min-width: 640px) {
+  .auto-grid-2 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .auto-grid-3 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .auto-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+@media (min-width: 1024px) {
+  .auto-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .auto-grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ===== PARALLAX LAYERS ===== */
+.parallax-layer { will-change: transform; }
+
+/* ===== LOADING STATES ===== */
+.img-loading { filter: blur(10px); transition: filter 0.5s ease; }
+.img-loaded { filter: blur(0); }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .nav-main, .bottom-nav, .breaking-banner, .sec-dots, #back-to-top, .share-group, .hero-cta { display: none !important; }
+  body { background: white; color: black; }
+  .ed-card { break-inside: avoid; border: 1px solid #ccc; }
+}
+</style>
+<base target="_blank">
 </head>
-<body class="min-h-screen">
-    <div id="particle-background"></div>
 
-    <header class="bg-white border-b-4 border-black sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-3">
-            <div class="flex justify-between items-center">
-                <a href="#" class="text-4xl font-bold">
-                    <span class="glitch-effect" data-text="NewsNexus">NewsNexus</span>
-                </a>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#top-stories" class="hover:text-primary-color transition duration-300">Top Stories</a>
-                    <a href="#categories" class="hover:text-primary-color transition duration-300">Categories</a>
-                    <a href="#data-viz" class="hover:text-primary-color transition duration-300">Insights</a>
-                    <a href="#ai-assistant" class="hover:text-primary-color transition duration-300">AI Assistant</a>
-                    <a href="#interactive-timeline" class="hover:text-primary-color transition duration-300">Timeline</a>
-                </div>
-                <button id="theme-toggle" class="neo-brutalist-button px-4 py-2 rounded-none">
-                    <i class="fas fa-adjust"></i> Theme
-                </button>
-            </div>
-        </nav>
-    </header>
+<body class="min-h-screen antialiased">
 
-    <main class="container mx-auto px-6 py-12">
-        <section id="hero" class="mb-24">
-            <h1 class="text-6xl md:text-8xl font-bold mb-8 leading-tight">
-                <span class="gradient-text">Redefining News</span><br>
-                <span class="glitch-effect" data-text="For the Digital Age">For the Digital Age</span>
-            </h1>
-            <p class="text-2xl mb-12">Experience the avant-garde of news consumption with our AI-powered, data-driven platform.</p>
-            
-            <div class="flex space-x-4">
-                <button id="get-started" class="neo-brutalist-button px-8 py-3 text-xl font-bold rounded-none">
-                    Dive In
-                </button>
-                <button id="learn-more" class="neo-brutalist-button px-8 py-3 text-xl font-bold rounded-none bg-white text-black">
-                    Explore Features
-                </button>
-            </div>
-        </section>
+<a href="#main-content" class="skip-link">Skip to content</a>
 
-        
+<div class="offline-bar" id="offline-bar">You are offline. Content may be outdated.</div>
 
-        <section id="top-stories" class="mb-24">
-            <h2 class="text-4xl font-bold mb-8 gradient-text">Breaking Stories</h2>
-            <div id="news-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- News items will be dynamically inserted here -->
-            </div>
-        </section>
+<div id="read-progress"></div>
 
-        <section id="categories" class="mb-24">
-            <h2 class="text-4xl font-bold mb-8 gradient-text">News Spectrum</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="general">General</button>
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="business">Business</button>
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="technology">Technology</button>
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="science">Science</button>
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="health">Health</button>
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="sports">Sports</button>
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="entertainment">Entertainment</button>
-                <button class="neo-brutalist-button px-6 py-3 text-lg font-bold rounded-none" data-category="politics">Politics</button>
-            </div>
-        </section>
+<!-- Section Dots -->
+<nav class="sec-dots" aria-label="Section navigation">
+  <a href="#hero" data-label="Top" class="active"></a>
+  <a href="#editors-picks" data-label="Editors"></a>
+  <a href="#top-stories" data-label="Stories"></a>
+  <a href="#trending" data-label="Trending"></a>
+  <a href="#insights" data-label="Insights"></a>
+  <a href="#timeline" data-label="Timeline"></a>
+  <a href="#perspectives" data-label="Views"></a>
+  <a href="#opinion" data-label="Opinion"></a>
+  <a href="#podcast" data-label="Audio"></a>
+  <a href="#authors" data-label="Authors"></a>
+</nav>
 
-        <section id="data-viz" class="mb-24">
-            <h2 class="text-4xl font-bold mb-8 gradient-text">News Analytics Hub</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="chart-container p-6">
-                    <h3 class="text-2xl font-bold mb-4">Trending Topics Heatmap</h3>
-                    <div id="topic-heatmap"></div>
-                </div>
-                <div class="chart-container p-6">
-                    <h3 class="text-2xl font-bold mb-4">Sentiment Analysis Radar</h3>
-                    <canvas id="sentimentRadarChart"></canvas>
-                </div>
-            </div>
-        </section>
+<!-- Command Palette -->
+<div id="cmd-palette" role="dialog" aria-label="Command palette">
+  <div class="cmd-box">
+    <input type="text" class="cmd-input" id="cmd-input" placeholder="Type a command or search..." aria-label="Command input">
+    <div class="cmd-results" id="cmd-results"></div>
+  </div>
+</div>
 
-        <section id="ai-assistant" class="mb-24">
-            <h2 class="text-4xl font-bold mb-8 gradient-text">AI News Curator</h2>
-            <div class="neo-brutalist-element p-6">
-                <div id="chat-container" class="mb-4 h-64 overflow-y-auto"></div>
-                <div class="flex items-center space-x-2">
-                    <input type="text" id="user-input" placeholder="Inquire about current events..." class="flex-grow px-4 py-2 border-2 border-black focus:outline-none focus:ring-2 focus:ring-primary-color">
-                    <button id="send-message" class="neo-brutalist-button px-4 py-2 rounded-none">
-                        <i class="fas fa-paper-plane"></i> Send
-                    </button>
-                </div>
-            </div>
-        </section>
+<!-- Search Overlay -->
+<div id="search-overlay" role="dialog" aria-label="Search">
+  <div class="container-nx">
+    <input type="text" placeholder="Search the archive..." id="search-input" aria-label="Search input">
+    <p class="mt-4 text-sm text-[var(--text-muted)] font-mono">Press ESC to close</p>
+  </div>
+</div>
 
-        <section id="interactive-timeline" class="mb-24">
-            <h2 class="text-4xl font-bold mb-8 gradient-text">Chronicle of Events</h2>
-            <div id="timeline-container" class="neo-brutalist-element p-6 h-[400px] overflow-x-auto"></div>
-        </section>
+<!-- Breaking Banner -->
+<div class="breaking-banner" id="breaking-banner" aria-label="Breaking news">
+  <div class="track" id="breaking-track">
+    <span class="item">BREAKING: EU Carbon Border Adjustment reaches final agreement after 18 months of negotiation</span>
+    <span class="item">BREAKING: Federal Reserve signals potential rate cut in July meeting minutes</span>
+    <span class="item">BREAKING: OpenAI announces GPT-5 reasoning capabilities with 40% improvement on mathematical benchmarks</span>
+    <span class="item">BREAKING: Major pharmaceutical merger announced between Pfizer and BioNTech worth $68 billion</span>
+    <span class="item">BREAKING: UN Security Council emergency session called over escalating tensions in South China Sea</span>
+    <span class="item">BREAKING: Tesla unveils next-generation battery technology with 500-mile range</span>
+  </div>
+</div>
 
-        <section id="news-comparison" class="mb-24">
-            <h2 class="text-4xl font-bold mb-8 gradient-text">Perspective Prism</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="neo-brutalist-element p-6">
-                    <h3 class="text-2xl font-bold mb-4">Source A</h3>
-                    <div id="source-a-content"></div>
-                </div>
-                <div class="neo-brutalist-element p-6">
-                    <h3 class="text-2xl font-bold mb-4">Source B</h3>
-                    <div id="source-b-content"></div>
-                </div>
-            </div>
-            <div id="comparison-analysis" class="mt-8 neo-brutalist-element p-6">
-                <h3 class="text-2xl font-bold mb-4">Analysis</h3>
-                <p id="analysis-content"></p>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-white border-t-4 border-black py-8">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-wrap justify-between items-center">
-                <div class="w-full md:w-1/3 text-center md:text-left mb-6 md:mb-0">
-                    <h4 class="text-2xl font-bold mb-4 gradient-text">NewsNexus</h4>
-                    <p class="text-sm">Pioneering the future of news consumption through AI and advanced data visualization.</p>
-                </div>
-                <div class="w-full md:w-1/3 text-center mb-6 md:mb-0">
-                    <h5 class="text-lg font-semibold mb-4">Quick Links</h5>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-primary-color transition duration-300">About Us</a></li>
-                        <li><a href="#" class="hover:text-primary-color transition duration-300">Contact</a></li>
-                        <li><a href="#" class="hover:text-primary-color transition duration-300">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-primary-color transition duration-300">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/3 text-center md:text-right">
-                    <h5 class="text-lg font-semibold mb-4">Connect With Us</h5>
-                    <div class="flex justify-center md:justify-end space-x-4">
-                        <a href="#" class="text-2xl hover:text-primary-color transition duration-300"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-2xl hover:text-primary-color transition duration-300"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-2xl hover:text-primary-color transition duration-300"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-2xl hover:text-primary-color transition duration-300"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-gray-200 mt-8 pt-8 text-center text-sm">
-                <p>&copy; 2024 NewsNexus 4.0. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <div class="scrolling-text">
-        <div class="scrolling-text-content">
-            Breaking News: Global leaders convene for climate summit • Tech giants unveil breakthrough in quantum computing • Major medical advancement in cancer treatment announced • Space agency confirms plans for first human Mars mission • Economic report shows unexpected growth in emerging markets
-        </div>
+<!-- Navigation -->
+<nav class="nav-main" id="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container-nx flex items-center justify-between w-full">
+    <a href="#" class="nav-brand flex items-center gap-2" aria-label="NewsNexus home">
+      <span>NewsNexus</span>
+      <span class="hidden sm:inline-block w-1 h-1 rounded-full bg-[var(--gold)]"></span>
+      <span class="hidden lg:inline font-mono text-[0.55rem] text-[var(--text-muted)] tracking-[0.2em] uppercase">Editorial Intelligence</span>
+    </a>
+    <div class="hidden lg:flex items-center gap-8">
+      <a href="#editors-picks" class="nav-link">Editors</a>
+      <a href="#top-stories" class="nav-link">Stories</a>
+      <a href="#trending" class="nav-link">Trending</a>
+      <a href="#insights" class="nav-link">Insights</a>
+      <a href="#timeline" class="nav-link">Timeline</a>
+      <a href="#perspectives" class="nav-link">Perspectives</a>
+      <a href="#opinion" class="nav-link">Opinion</a>
+      <a href="#podcast" class="nav-link">Audio</a>
     </div>
+    <div class="flex items-center gap-1">
+      <button id="search-trigger" class="nav-btn" aria-label="Search"><i class="fas fa-search"></i></button>
+      <button id="voice-trigger" class="nav-btn voice-btn" aria-label="Voice search"><i class="fas fa-microphone"></i></button>
+      <button id="bookmark-toggle" class="nav-btn relative" aria-label="Bookmarks">
+        <i class="fas fa-bookmark"></i>
+        <span id="bookmark-count" class="badge hidden">0</span>
+      </button>
+      <button id="theme-toggle" class="nav-btn" aria-label="Toggle theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </button>
+      <button id="mobile-menu-btn" class="nav-btn lg:hidden" aria-label="Open menu"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
 
-    <script>
-        // NewsAPI.org API key (replace with your actual API key)
-        const API_KEY = 'd073ac7071bf4a6d8da7d73ba7e4e39a';
+<!-- Mobile Menu -->
+<div id="mobile-menu" role="dialog" aria-label="Mobile menu">
+  <div class="container-nx pt-20 flex flex-col">
+    <a href="#editors-picks" class="mobile-link">Editor's Picks</a>
+    <a href="#top-stories" class="mobile-link">Top Stories</a>
+    <a href="#trending" class="mobile-link">Trending</a>
+    <a href="#insights" class="mobile-link">Insights</a>
+    <a href="#timeline" class="mobile-link">Timeline</a>
+    <a href="#perspectives" class="mobile-link">Perspectives</a>
+    <a href="#opinion" class="mobile-link">Opinion</a>
+    <a href="#podcast" class="mobile-link">Audio</a>
+    <a href="#authors" class="mobile-link">Authors</a>
+  </div>
+  <button id="mobile-close" class="absolute top-4 right-4 w-12 h-12 flex items-center justify-center text-2xl text-[var(--text-muted)]" aria-label="Close menu"><i class="fas fa-times"></i></button>
+</div>
 
-        // Fetch News Function
-        async function fetchNews(category = 'general') {
-            const newsContainer = document.getElementById('news-container');
-            newsContainer.innerHTML = '<p class="text-center">Curating the latest stories...</p>';
+<main id="main-content">
 
-            try {
-                const response = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=9&apiKey=${API_KEY}`);
-                const data = await response.json();
+<!-- Hero Section -->
+<section class="hero-section" id="hero" aria-label="Hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content container-nx">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div class="lg:col-span-7">
+        <div class="hero-meta">
+          <span><span class="live-dot"></span>Live Feed</span>
+          <span id="hero-date"></span>
+          <span id="hero-time"></span>
+        </div>
+        <h1 class="hero-headline" id="hero-headline">The World,<br>Decoded.</h1>
+        <p class="hero-sub">
+          Where editorial judgment meets machine intelligence. We curate the signal from the noise, delivering stories that shape our collective understanding.
+        </p>
+        <div class="hero-cta">
+          <button onclick="document.getElementById('editors-picks').scrollIntoView({behavior:'smooth'})" class="btn-primary">Read Now</button>
+          <button onclick="document.getElementById('insights').scrollIntoView({behavior:'smooth'})" class="btn-secondary">Explore Data</button>
+        </div>
+        <div class="flex items-center gap-4 mt-8 flex-wrap">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-[var(--bg-tert)] border-2 border-[var(--bg)] flex items-center justify-center text-[0.6rem] font-mono text-[var(--gold)]">24</div>
+            <div class="w-8 h-8 rounded-full bg-[var(--bg-tert)] border-2 border-[var(--bg)] flex items-center justify-center text-[0.6rem] font-mono text-[var(--gold)]">7</div>
+            <div class="w-8 h-8 rounded-full bg-[var(--bg-tert)] border-2 border-[var(--bg)] flex items-center justify-center text-[0.6rem] font-mono text-[var(--gold)]">k</div>
+          </div>
+          <p class="text-xs text-[var(--text-muted)] font-mono">Sources monitored</p>
+        </div>
+      </div>
+      <div class="lg:col-span-5">
+        <div class="hero-cards" id="hero-cards">
+          <div class="h-card">
+            <div class="cat">Climate</div>
+            <div class="title" id="hero-card-title-1">Loading curated stories...</div>
+            <div class="meta">2 min read</div>
+          </div>
+          <div class="h-card">
+            <div class="cat">Technology</div>
+            <div class="title" id="hero-card-title-2">Loading curated stories...</div>
+            <div class="meta">4 min read</div>
+          </div>
+          <div class="h-card">
+            <div class="cat">Global Affairs</div>
+            <div class="title" id="hero-card-title-3">Loading curated stories...</div>
+            <div class="meta">3 min read</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-                if (data.articles && data.articles.length > 0) {
-                    newsContainer.innerHTML = '';
-                    data.articles.forEach(article => {
-                        const newsCard = document.createElement('div');
-                        newsCard.className = 'news-card neo-brutalist-element p-6';
-                        newsCard.innerHTML = `
-                            <h3 class="text-xl font-bold mb-2">${article.title}</h3>
-                            <p class="mb-4">${article.description || 'No description available.'}</p>
-                            <a href="${article.url}" target="_blank" class="text-blue-500 hover:underline">Dive Deeper</a>
-                        `;
-                        newsContainer.appendChild(newsCard);
-                    });
-                } else {
-                    newsContainer.innerHTML = '<p class="text-center">Our AI is currently processing the latest news. Please check back shortly.</p>';
-                }
-            } catch (error) {
-                console.error('Error fetching news:', error);
-                newsContainer.innerHTML = '<p class="text-center">We\'re experiencing a temporary glitch in our news matrix. Please try again soon.</p>';
-            }
+<!-- Utility Bar -->
+<div class="utility-bar" aria-label="Market and weather data">
+  <div class="container-nx">
+    <span class="u-item"><i class="fas fa-cloud-sun text-[var(--gold)]"></i> NYC 24°C</span>
+    <span class="u-item"><i class="fas fa-cloud-rain text-[var(--gold)]"></i> LON 18°C</span>
+    <span class="u-item"><i class="fas fa-sun text-[var(--gold)]"></i> TYO 31°C</span>
+    <span class="u-item u-up"><i class="fas fa-arrow-up"></i> S&P 5,847 +0.42%</span>
+    <span class="u-item u-down"><i class="fas fa-arrow-down"></i> NAS 18,234 -0.18%</span>
+    <span class="u-item u-up"><i class="fas fa-arrow-up"></i> BTC $67,432 +1.24%</span>
+    <span class="u-item u-up"><i class="fas fa-arrow-up"></i> GLD $2,348 +0.08%</span>
+    <span class="u-item"><i class="fas fa-oil-can text-[var(--gold)]"></i> OIL $78.42 -0.12%</span>
+  </div>
+</div>
+
+<!-- Editor's Picks - Bento Grid -->
+<section id="editors-picks" class="py-nx">
+  <div class="container-nx">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <div class="sec-label reveal">Featured</div>
+        <h2 class="sec-title reveal reveal-d1">Editor's Picks</h2>
+      </div>
+      <a href="#top-stories" class="hidden md:flex items-center gap-2 font-mono text-xs tracking-[0.15em] uppercase text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors reveal reveal-d2">
+        View All <i class="fas fa-arrow-right text-xs"></i>
+      </a>
+    </div>
+    <div class="bento-grid" id="bento-grid">
+      <!-- Bento items loaded by JS -->
+      <div class="bento-item aspect-[4/3] bg-[var(--bg-tert)] skeleton"></div>
+      <div class="bento-item aspect-[4/3] bg-[var(--bg-tert)] skeleton"></div>
+      <div class="bento-item aspect-[4/3] bg-[var(--bg-tert)] skeleton"></div>
+      <div class="bento-item aspect-[4/3] bg-[var(--bg-tert)] skeleton"></div>
+      <div class="bento-item aspect-[4/3] bg-[var(--bg-tert)] skeleton"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Top Stories -->
+<section id="top-stories" class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Latest</div>
+      <h2 class="sec-title reveal reveal-d1">Top Stories</h2>
+    </div>
+    <div class="auto-grid auto-grid-3" id="stories-grid">
+      <!-- Stories loaded by JS -->
+      <div class="ed-card"><div class="img-wrap"><div class="skeleton w-full h-full"></div></div><div class="p-4 space-y-2"><div class="skeleton h-3 w-16"></div><div class="skeleton h-5 w-full"></div><div class="skeleton h-4 w-3/4"></div></div></div>
+      <div class="ed-card"><div class="img-wrap"><div class="skeleton w-full h-full"></div></div><div class="p-4 space-y-2"><div class="skeleton h-3 w-16"></div><div class="skeleton h-5 w-full"></div><div class="skeleton h-4 w-3/4"></div></div></div>
+      <div class="ed-card"><div class="img-wrap"><div class="skeleton w-full h-full"></div></div><div class="p-4 space-y-2"><div class="skeleton h-3 w-16"></div><div class="skeleton h-5 w-full"></div><div class="skeleton h-4 w-3/4"></div></div></div>
+      <div class="ed-card"><div class="img-wrap"><div class="skeleton w-full h-full"></div></div><div class="p-4 space-y-2"><div class="skeleton h-3 w-16"></div><div class="skeleton h-5 w-full"></div><div class="skeleton h-4 w-3/4"></div></div></div>
+      <div class="ed-card"><div class="img-wrap"><div class="skeleton w-full h-full"></div></div><div class="p-4 space-y-2"><div class="skeleton h-3 w-16"></div><div class="skeleton h-5 w-full"></div><div class="skeleton h-4 w-3/4"></div></div></div>
+      <div class="ed-card"><div class="img-wrap"><div class="skeleton w-full h-full"></div></div><div class="p-4 space-y-2"><div class="skeleton h-3 w-16"></div><div class="skeleton h-5 w-full"></div><div class="skeleton h-4 w-3/4"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Trending Topics - Horizontal Scroll Mobile / Grid Desktop -->
+<section id="trending" class="py-nx">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Trending</div>
+      <h2 class="sec-title reveal reveal-d1">What's Moving</h2>
+    </div>
+    <div class="h-scroll reveal reveal-d2" id="trending-scroll">
+      <div class="trend-card">
+        <div class="trend-rank">01</div>
+        <div class="trend-title">Carbon Border Tax</div>
+        <div class="trend-meta">2,847 mentions</div>
+        <div class="trend-bar"><div class="trend-fill" style="width:92%"></div></div>
+      </div>
+      <div class="trend-card">
+        <div class="trend-rank">02</div>
+        <div class="trend-title">Quantum Supremacy</div>
+        <div class="trend-meta">1,934 mentions</div>
+        <div class="trend-bar"><div class="trend-fill" style="width:78%"></div></div>
+      </div>
+      <div class="trend-card">
+        <div class="trend-rank">03</div>
+        <div class="trend-title">Digital Currency</div>
+        <div class="trend-meta">1,562 mentions</div>
+        <div class="trend-bar"><div class="trend-fill" style="width:65%"></div></div>
+      </div>
+      <div class="trend-card">
+        <div class="trend-rank">04</div>
+        <div class="trend-title">Mars Mission</div>
+        <div class="trend-meta">1,203 mentions</div>
+        <div class="trend-bar"><div class="trend-fill" style="width:52%"></div></div>
+      </div>
+      <div class="trend-card">
+        <div class="trend-rank">05</div>
+        <div class="trend-title">Gene Therapy</div>
+        <div class="trend-meta">987 mentions</div>
+        <div class="trend-bar"><div class="trend-fill" style="width:41%"></div></div>
+      </div>
+      <div class="trend-card">
+        <div class="trend-rank">06</div>
+        <div class="trend-title">Indo-Pacific</div>
+        <div class="trend-meta">856 mentions</div>
+        <div class="trend-bar"><div class="trend-fill" style="width:36%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section id="categories" class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx">
+    <div class="text-center mb-8">
+      <div class="sec-label center reveal">Filter</div>
+      <h2 class="sec-title reveal reveal-d1">News Spectrum</h2>
+    </div>
+    <div class="cat-pills justify-center reveal reveal-d2" id="category-pills">
+      <button class="cat-pill active" data-category="all">All</button>
+      <button class="cat-pill" data-category="planet-climate">Climate</button>
+      <button class="cat-pill" data-category="human-development">Development</button>
+      <button class="cat-pill" data-category="science-technology">Technology</button>
+      <button class="cat-pill" data-category="existential-threats">Security</button>
+      <button class="cat-pill" data-category="business">Business</button>
+      <button class="cat-pill" data-category="health">Health</button>
+      <button class="cat-pill" data-category="sports">Sports</button>
+      <button class="cat-pill" data-category="politics">Politics</button>
+      <button class="cat-pill" data-category="culture">Culture</button>
+    </div>
+  </div>
+</section>
+
+<!-- Insights -->
+<section id="insights" class="py-nx">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Analytics</div>
+      <h2 class="sec-title reveal reveal-d1">News Analytics</h2>
+    </div>
+    <div class="auto-grid auto-grid-2 gap-4 mb-4">
+      <div class="chart-box reveal">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-serif text-lg font-bold">Topic Intensity</h3>
+          <span class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-wider uppercase px-2 py-1 border border-[var(--border)]">Live</span>
+        </div>
+        <div id="heatmap-viz" class="w-full" style="min-height:250px"></div>
+      </div>
+      <div class="chart-box reveal reveal-d1">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-serif text-lg font-bold">Sentiment Radar</h3>
+          <span class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-wider uppercase px-2 py-1 border border-[var(--border)]">24h</span>
+        </div>
+        <canvas id="sentiment-chart" class="w-full" style="max-height:280px"></canvas>
+      </div>
+    </div>
+    <div class="auto-grid auto-grid-3 gap-4">
+      <div class="ed-card p-5 reveal">
+        <div class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-wider uppercase mb-1">Articles Today</div>
+        <div class="font-serif text-3xl font-bold text-[var(--gold)]" id="stat-articles">0</div>
+        <div class="mt-2 h-[2px] w-full bg-[var(--bg-tert)]"><div class="h-full bg-[var(--gold)]" style="width:78%"></div></div>
+      </div>
+      <div class="ed-card p-5 reveal reveal-d1">
+        <div class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-wider uppercase mb-1">Active Sources</div>
+        <div class="font-serif text-3xl font-bold text-[var(--gold)]" id="stat-sources">0</div>
+        <div class="mt-2 h-[2px] w-full bg-[var(--bg-tert)]"><div class="h-full bg-[var(--gold)]" style="width:92%"></div></div>
+      </div>
+      <div class="ed-card p-5 reveal reveal-d2">
+        <div class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-wider uppercase mb-1">Countries</div>
+        <div class="font-serif text-3xl font-bold text-[var(--gold)]" id="stat-countries">0</div>
+        <div class="mt-2 h-[2px] w-full bg-[var(--bg-tert)]"><div class="h-full bg-[var(--gold)]" style="width:65%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Poll -->
+<section class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Poll</div>
+      <h2 class="sec-title reveal reveal-d1">Reader Pulse</h2>
+    </div>
+    <div class="auto-grid auto-grid-2 gap-6">
+      <div class="ed-card p-6 reveal">
+        <p class="font-serif text-lg font-bold mb-6">Which topic should we cover more deeply?</p>
+        <div id="poll-options">
+          <div class="poll-option" data-value="climate">
+            <div class="poll-radio"><i class="fas fa-check text-[0.5rem] text-white opacity-0 transition-opacity"></i></div>
+            <span class="poll-text">Climate Policy & Carbon Markets</span>
+            <div class="poll-bar-bg"><div class="poll-bar-fill" style="width:0%"></div></div>
+            <span class="poll-pct">42%</span>
+          </div>
+          <div class="poll-option" data-value="quantum">
+            <div class="poll-radio"><i class="fas fa-check text-[0.5rem] text-white opacity-0 transition-opacity"></i></div>
+            <span class="poll-text">Quantum Computing & AI Ethics</span>
+            <div class="poll-bar-bg"><div class="poll-bar-fill" style="width:0%"></div></div>
+            <span class="poll-pct">28%</span>
+          </div>
+          <div class="poll-option" data-value="crypto">
+            <div class="poll-radio"><i class="fas fa-check text-[0.5rem] text-white opacity-0 transition-opacity"></i></div>
+            <span class="poll-text">Digital Currencies & DeFi</span>
+            <div class="poll-bar-bg"><div class="poll-bar-fill" style="width:0%"></div></div>
+            <span class="poll-pct">18%</span>
+          </div>
+          <div class="poll-option" data-value="health">
+            <div class="poll-radio"><i class="fas fa-check text-[0.5rem] text-white opacity-0 transition-opacity"></i></div>
+            <span class="poll-text">Gene Therapy & Longevity</span>
+            <div class="poll-bar-bg"><div class="poll-bar-fill" style="width:0%"></div></div>
+            <span class="poll-pct">12%</span>
+          </div>
+        </div>
+        <p class="font-mono text-[0.55rem] text-[var(--text-muted)] mt-4">2,847 votes • Updated hourly</p>
+      </div>
+      <div class="ed-card p-6 reveal reveal-d1">
+        <p class="font-serif text-lg font-bold mb-6">Do you trust AI-curated news?</p>
+        <div id="poll-options-2">
+          <div class="poll-option" data-value="yes">
+            <div class="poll-radio"><i class="fas fa-check text-[0.5rem] text-white opacity-0 transition-opacity"></i></div>
+            <span class="poll-text">Yes, with human oversight</span>
+            <div class="poll-bar-bg"><div class="poll-bar-fill" style="width:0%"></div></div>
+            <span class="poll-pct">56%</span>
+          </div>
+          <div class="poll-option" data-value="sometimes">
+            <div class="poll-radio"><i class="fas fa-check text-[0.5rem] text-white opacity-0 transition-opacity"></i></div>
+            <span class="poll-text">Only for discovery, not judgment</span>
+            <div class="poll-bar-bg"><div class="poll-bar-fill" style="width:0%"></div></div>
+            <span class="poll-pct">31%</span>
+          </div>
+          <div class="poll-option" data-value="no">
+            <div class="poll-radio"><i class="fas fa-check text-[0.5rem] text-white opacity-0 transition-opacity"></i></div>
+            <span class="poll-text">No, human editors only</span>
+            <div class="poll-bar-bg"><div class="poll-bar-fill" style="width:0%"></div></div>
+            <span class="poll-pct">13%</span>
+          </div>
+        </div>
+        <p class="font-mono text-[0.55rem] text-[var(--text-muted)] mt-4">4,132 votes • Updated hourly</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section id="timeline" class="py-nx">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Chronicle</div>
+      <h2 class="sec-title reveal reveal-d1">Event Timeline</h2>
+    </div>
+    <div class="ed-card p-4 md:p-8 reveal reveal-d2" id="timeline-wrapper">
+      <div id="timeline-viz" class="w-full" style="min-height:350px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Perspectives -->
+<section id="perspectives" class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Analysis</div>
+      <h2 class="sec-title reveal reveal-d1">Perspective Prism</h2>
+    </div>
+    <div class="auto-grid auto-grid-2 gap-4 mb-4">
+      <div class="compare-a compare-card reveal">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 bg-[var(--bg-tert)] flex items-center justify-center text-[var(--gold)]"><i class="fas fa-newspaper text-sm"></i></div>
+          <div>
+            <div class="font-bold text-sm">The Guardian</div>
+            <div class="font-mono text-[0.55rem] text-[var(--text-muted)]">Progressive • Environmental</div>
+          </div>
+        </div>
+        <h3 class="font-serif text-lg font-bold mb-2">New Energy Policy Announced</h3>
+        <p class="text-sm text-[var(--text-sec)] leading-relaxed">
+          The government unveiled a comprehensive energy policy aimed at reducing carbon emissions by 50% within the next decade. The plan includes significant investments in renewable energy sources and a gradual phase-out of fossil fuels, positioning the nation as a leader in climate action.
+        </p>
+        <div class="flex gap-2 mt-4 flex-wrap">
+          <span class="font-mono text-[0.55rem] tracking-wider uppercase px-2 py-1 border border-[var(--gold)] text-[var(--gold)]">Optimistic</span>
+          <span class="font-mono text-[0.55rem] tracking-wider uppercase px-2 py-1 border border-[var(--border)] text-[var(--text-muted)]">Policy</span>
+        </div>
+      </div>
+      <div class="compare-b compare-card reveal reveal-d1">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 bg-[var(--bg-tert)] flex items-center justify-center text-[var(--text-muted)]"><i class="fas fa-chart-line text-sm"></i></div>
+          <div>
+            <div class="font-bold text-sm">Financial Times</div>
+            <div class="font-mono text-[0.55rem] text-[var(--text-muted)]">Financial • Economic</div>
+          </div>
+        </div>
+        <h3 class="font-serif text-lg font-bold mb-2">Controversial Energy Plan Sparks Debate</h3>
+        <p class="text-sm text-[var(--text-sec)] leading-relaxed">
+          The administration's proposed energy strategy has sparked intense debate. Critics argue that ambitious emission targets could lead to significant job losses in traditional energy sectors and potentially higher consumer costs, questioning the economic feasibility of the timeline.
+        </p>
+        <div class="flex gap-2 mt-4 flex-wrap">
+          <span class="font-mono text-[0.55rem] tracking-wider uppercase px-2 py-1 border border-[var(--text-muted)] text-[var(--text-muted)]">Cautious</span>
+          <span class="font-mono text-[0.55rem] tracking-wider uppercase px-2 py-1 border border-[var(--border)] text-[var(--text-muted)]">Economy</span>
+        </div>
+      </div>
+    </div>
+    <div class="ed-card p-6 md:p-8 reveal reveal-d2">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-9 h-9 bg-[var(--bg-tert)] flex items-center justify-center text-[var(--gold)]"><i class="fas fa-brain text-sm"></i></div>
+        <div>
+          <div class="font-bold text-sm">AI Analysis</div>
+          <div class="font-mono text-[0.55rem] text-[var(--text-muted)]">Bias Detection • Sentiment Comparison</div>
+        </div>
+      </div>
+      <p class="text-sm text-[var(--text-sec)] leading-relaxed mb-6">
+        The two sources present fundamentally different framing of the same policy. The Guardian emphasizes environmental benefits and long-term positioning, using optimistic language and focusing on governmental leadership. The Financial Times highlights economic risks and job displacement, employing cautious terminology and centering consumer impact. The divergence illustrates how outlet perspective shapes narrative: environmental outlets prioritize planetary outcomes while financial outlets prioritize market stability. Both omit the other's primary concern, suggesting readers benefit from cross-referencing coverage to form a holistic understanding.
+      </p>
+      <div class="auto-grid auto-grid-3 gap-3">
+        <div class="text-center p-4 border border-[var(--border)]">
+          <div class="font-serif text-2xl font-bold text-[var(--gold)]">72%</div>
+          <div class="font-mono text-[0.55rem] text-[var(--text-muted)] mt-1 uppercase tracking-wider">Topic Overlap</div>
+        </div>
+        <div class="text-center p-4 border border-[var(--border)]">
+          <div class="font-serif text-2xl font-bold text-[var(--gold)]">34°</div>
+          <div class="font-mono text-[0.55rem] text-[var(--text-muted)] mt-1 uppercase tracking-wider">Sentiment Divergence</div>
+        </div>
+        <div class="text-center p-4 border border-[var(--border)]">
+          <div class="font-serif text-2xl font-bold text-[var(--gold)]">A-</div>
+          <div class="font-mono text-[0.55rem] text-[var(--text-muted)] mt-1 uppercase tracking-wider">Factual Accuracy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Most Read + Live Blog -->
+<section class="py-nx">
+  <div class="container-nx">
+    <div class="auto-grid auto-grid-2 gap-8 lg:gap-12">
+      <!-- Most Read -->
+      <div>
+        <div class="sec-label reveal">Popular</div>
+        <h2 class="sec-title mb-6 reveal reveal-d1">Most Read</h2>
+        <div id="most-read-list">
+          <div class="most-read-item reveal">
+            <div class="mr-rank">01</div>
+            <div>
+              <div class="mr-title">The Hidden Costs of the Energy Transition</div>
+              <div class="mr-meta">Sarah Chen • 8 min • 2.4k views</div>
+            </div>
+          </div>
+          <div class="most-read-item reveal reveal-d1">
+            <div class="mr-rank">02</div>
+            <div>
+              <div class="mr-title">Quantum Computing: The Next Silicon Valley</div>
+              <div class="mr-meta">James Park • 6 min • 1.9k views</div>
+            </div>
+          </div>
+          <div class="most-read-item reveal reveal-d2">
+            <div class="mr-rank">03</div>
+            <div>
+              <div class="mr-title">Inside the Central Bank Digital Currency Race</div>
+              <div class="mr-meta">Maria Santos • 12 min • 1.7k views</div>
+            </div>
+          </div>
+          <div class="most-read-item reveal reveal-d3">
+            <div class="mr-rank">04</div>
+            <div>
+              <div class="mr-title">Gene Therapy Breakthrough: A New Era for Medicine</div>
+              <div class="mr-meta">Dr. A. Patel • 5 min • 1.5k views</div>
+            </div>
+          </div>
+          <div class="most-read-item reveal reveal-d4">
+            <div class="mr-rank">05</div>
+            <div>
+              <div class="mr-title">The Geopolitics of the Indo-Pacific</div>
+              <div class="mr-meta">Robert Kim • 10 min • 1.3k views</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Live Blog -->
+      <div>
+        <div class="sec-label reveal">Live</div>
+        <h2 class="sec-title mb-6 reveal reveal-d1">Live Updates</h2>
+        <div class="ed-card p-5 md:p-6">
+          <div class="live-blog-item">
+            <div class="lb-time">14:32 UTC</div>
+            <div class="lb-text">EU Parliament votes 412-189 to approve the Carbon Border Adjustment Mechanism. Implementation begins January 2027.</div>
+          </div>
+          <div class="live-blog-item">
+            <div class="lb-time">14:15 UTC</div>
+            <div class="lb-text">Federal Reserve Chair Powell concludes press conference. Markets react positively to dovish tone on future rate decisions.</div>
+          </div>
+          <div class="live-blog-item">
+            <div class="lb-time">13:58 UTC</div>
+            <div class="lb-text">Breaking: OpenAI confirms GPT-5 will feature multimodal reasoning across text, image, and audio inputs.</div>
+          </div>
+          <div class="live-blog-item">
+            <div class="lb-time">13:42 UTC</div>
+            <div class="lb-text">Tesla shares rise 3.2% following battery technology announcement. Analysts upgrade price targets.</div>
+          </div>
+          <div class="live-blog-item">
+            <div class="lb-time">13:20 UTC</div>
+            <div class="lb-text">UN Secretary-General calls for emergency climate fund mobilization ahead of COP31 summit in Dubai.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Opinion -->
+<section id="opinion" class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Opinion</div>
+      <h2 class="sec-title reveal reveal-d1">Editorial Voice</h2>
+    </div>
+    <div class="auto-grid auto-grid-3 gap-4">
+      <div class="opinion-card reveal">
+        <div class="opinion-quote">The energy transition is not merely an engineering challenge. It is a test of our collective capacity to imagine a future beyond the constraints of the present.</div>
+        <div class="opinion-author">
+          <div class="avatar">SC</div>
+          <div>
+            <div class="font-bold text-sm">Sarah Chen</div>
+            <div class="font-mono text-[0.55rem] text-[var(--text-muted)]">Climate Editor</div>
+          </div>
+        </div>
+      </div>
+      <div class="opinion-card reveal reveal-d1">
+        <div class="opinion-quote">Quantum computing will not replace classical systems. It will reveal problems we never knew were solvable, expanding the frontier of the possible.</div>
+        <div class="opinion-author">
+          <div class="avatar">JP</div>
+          <div>
+            <div class="font-bold text-sm">James Park</div>
+            <div class="font-mono text-[0.55rem] text-[var(--text-muted)]">Technology Correspondent</div>
+          </div>
+        </div>
+      </div>
+      <div class="opinion-card reveal reveal-d2">
+        <div class="opinion-quote">Central bank digital currencies are not about innovation. They are about sovereignty in a world where money is increasingly dematerialized.</div>
+        <div class="opinion-author">
+          <div class="avatar">MS</div>
+          <div>
+            <div class="font-bold text-sm">Maria Santos</div>
+            <div class="font-mono text-[0.55rem] text-[var(--text-muted)]">Finance Editor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Podcast / Audio -->
+<section id="podcast" class="py-nx">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Audio</div>
+      <h2 class="sec-title reveal reveal-d1">Nexus Audio</h2>
+    </div>
+    <div class="auto-grid auto-grid-2 gap-4">
+      <div class="podcast-player reveal">
+        <button class="podcast-play" id="podcast-play-btn" aria-label="Play podcast"><i class="fas fa-play ml-0.5"></i></button>
+        <div class="flex-1 min-w-0">
+          <div class="font-serif font-bold text-sm truncate">The Daily Briefing</div>
+          <div class="font-mono text-[0.55rem] text-[var(--text-muted)] mb-2">June 13, 2026 • 24 min</div>
+          <div class="podcast-wave" id="podcast-wave"></div>
+        </div>
+        <div class="font-mono text-[0.55rem] text-[var(--text-muted)] flex-shrink-0">12:34</div>
+      </div>
+      <div class="podcast-player reveal reveal-d1">
+        <button class="podcast-play" aria-label="Play podcast"><i class="fas fa-play ml-0.5"></i></button>
+        <div class="flex-1 min-w-0">
+          <div class="font-serif font-bold text-sm truncate">Deep Dive: Quantum Era</div>
+          <div class="font-mono text-[0.55rem] text-[var(--text-muted)] mb-2">June 12, 2026 • 42 min</div>
+          <div class="podcast-wave" id="podcast-wave-2"></div>
+        </div>
+        <div class="font-mono text-[0.55rem] text-[var(--text-muted)] flex-shrink-0">08:15</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Photo Essay -->
+<section class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Visual</div>
+      <h2 class="sec-title reveal reveal-d1">Photo Essay</h2>
+    </div>
+    <div class="masonry-grid" id="masonry-grid">
+      <div class="masonry-item reveal">
+        <img src="https://picsum.photos/seed/photo1/400/500" alt="" loading="lazy">
+        <div class="overlay"><div class="overlay-text">The Arctic Transition</div></div>
+      </div>
+      <div class="masonry-item reveal reveal-d1">
+        <img src="https://picsum.photos/seed/photo2/400/300" alt="" loading="lazy">
+        <div class="overlay"><div class="overlay-text">Urban Density</div></div>
+      </div>
+      <div class="masonry-item reveal reveal-d2">
+        <img src="https://picsum.photos/seed/photo3/400/450" alt="" loading="lazy">
+        <div class="overlay"><div class="overlay-text">Silicon Valley at Dawn</div></div>
+      </div>
+      <div class="masonry-item reveal reveal-d3">
+        <img src="https://picsum.photos/seed/photo4/400/350" alt="" loading="lazy">
+        <div class="overlay"><div class="overlay-text">Borderlands</div></div>
+      </div>
+      <div class="masonry-item reveal reveal-d4">
+        <img src="https://picsum.photos/seed/photo5/400/600" alt="" loading="lazy">
+        <div class="overlay"><div class="overlay-text">The Last Glaciers</div></div>
+      </div>
+      <div class="masonry-item reveal reveal-d4">
+        <img src="https://picsum.photos/seed/photo6/400/400" alt="" loading="lazy">
+        <div class="overlay"><div class="overlay-text">Assembly Lines</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Authors -->
+<section id="authors" class="py-nx">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Team</div>
+      <h2 class="sec-title reveal reveal-d1">Contributors</h2>
+    </div>
+    <div class="auto-grid auto-grid-4 gap-4">
+      <div class="author-card reveal">
+        <div class="author-avatar">SC</div>
+        <div>
+          <div class="author-name">Sarah Chen</div>
+          <div class="author-role">Climate Editor</div>
+          <div class="author-count">142 articles</div>
+        </div>
+      </div>
+      <div class="author-card reveal reveal-d1">
+        <div class="author-avatar">JP</div>
+        <div>
+          <div class="author-name">James Park</div>
+          <div class="author-role">Technology Correspondent</div>
+          <div class="author-count">98 articles</div>
+        </div>
+      </div>
+      <div class="author-card reveal reveal-d2">
+        <div class="author-avatar">MS</div>
+        <div>
+          <div class="author-name">Maria Santos</div>
+          <div class="author-role">Finance Editor</div>
+          <div class="author-count">156 articles</div>
+        </div>
+      </div>
+      <div class="author-card reveal reveal-d3">
+        <div class="author-avatar">RK</div>
+        <div>
+          <div class="author-name">Robert Kim</div>
+          <div class="author-role">Security Analyst</div>
+          <div class="author-count">87 articles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Topic Clusters -->
+<section class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx">
+    <div class="mb-8">
+      <div class="sec-label reveal">Explore</div>
+      <h2 class="sec-title reveal reveal-d1">Topic Clusters</h2>
+    </div>
+    <div class="text-center reveal reveal-d2">
+      <span class="topic-tag hot">Climate Policy</span>
+      <span class="topic-tag">Quantum Computing</span>
+      <span class="topic-tag hot">Digital Currency</span>
+      <span class="topic-tag">Gene Therapy</span>
+      <span class="topic-tag">Space Exploration</span>
+      <span class="topic-tag hot">AI Ethics</span>
+      <span class="topic-tag">Geopolitics</span>
+      <span class="topic-tag">Renewable Energy</span>
+      <span class="topic-tag">Cybersecurity</span>
+      <span class="topic-tag hot">Pandemic Preparedness</span>
+      <span class="topic-tag">Supply Chain</span>
+      <span class="topic-tag">Metaverse</span>
+      <span class="topic-tag">Longevity</span>
+      <span class="topic-tag">Fusion Energy</span>
+      <span class="topic-tag hot">Data Privacy</span>
+      <span class="topic-tag">Autonomous Vehicles</span>
+      <span class="topic-tag">Ocean Conservation</span>
+      <span class="topic-tag">Neuroscience</span>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-nx">
+  <div class="container-nx">
+    <div class="newsletter-box reveal">
+      <div class="font-mono text-[0.6rem] text-[var(--gold)] tracking-[0.2em] uppercase mb-3">Subscribe</div>
+      <h2 class="font-serif text-2xl md:text-3xl font-bold mb-3">The Nexus Briefing</h2>
+      <p class="text-[var(--text-sec)] mb-6 max-w-md mx-auto text-sm">Curated intelligence delivered to your inbox every morning. No noise. No fluff. Only what matters.</p>
+      <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+        <input type="email" placeholder="your@email.com" class="flex-1 px-5 py-3 bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] font-mono text-sm outline-none focus:border-[var(--gold)] transition-colors" aria-label="Email address">
+        <button class="px-6 py-3 bg-[var(--text)] text-[var(--bg)] font-mono text-xs tracking-[0.15em] uppercase hover:bg-[var(--gold)] transition-colors" id="newsletter-btn">Subscribe</button>
+      </div>
+      <p class="font-mono text-[0.55rem] text-[var(--text-muted)] mt-4">Join 47,000+ readers. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AI Curator -->
+<section id="curator" class="py-nx bg-[var(--bg-tert)]">
+  <div class="container-nx max-w-3xl">
+    <div class="text-center mb-8">
+      <div class="sec-label center reveal">AI Assistant</div>
+      <h2 class="sec-title reveal reveal-d1">Nexus Curator</h2>
+      <p class="mt-3 text-[var(--text-sec)] max-w-lg mx-auto text-sm">Ask questions, request summaries, compare perspectives. Your personal intelligence layer.</p>
+    </div>
+    <div class="ed-card overflow-hidden reveal reveal-d2">
+      <div class="flex items-center gap-3 px-4 py-3 border-b border-[var(--border)] bg-[var(--bg-tert)]">
+        <div class="w-8 h-8 bg-[var(--bg)] border border-[var(--gold)] flex items-center justify-center text-[var(--gold)] text-xs"><i class="fas fa-robot"></i></div>
+        <div>
+          <div class="font-bold text-sm">Nexus Curator</div>
+          <div class="font-mono text-[0.55rem] text-[var(--text-muted)]">Online • GPT-4 Powered</div>
+        </div>
+        <div class="ml-auto flex gap-1">
+          <span class="w-2 h-2 rounded-full bg-[var(--gold)] animate-pulse"></span>
+        </div>
+      </div>
+      <div id="chat-messages" class="h-[350px] md:h-[400px] overflow-y-auto p-4 space-y-3">
+        <div class="flex gap-2">
+          <div class="w-7 h-7 bg-[var(--bg-tert)] border border-[var(--gold)] flex items-center justify-center text-[var(--gold)] text-xs flex-shrink-0"><i class="fas fa-robot"></i></div>
+          <div class="chat-bubble ai text-sm">
+            Welcome to NewsNexus. I'm your AI curator. Ask me about any topic, request summaries, or explore connections between stories. What would you like to discover today?
+          </div>
+        </div>
+      </div>
+      <div class="p-3 border-t border-[var(--border)] bg-[var(--bg-tert)]">
+        <div class="flex items-center gap-2">
+          <input type="text" id="chat-input" placeholder="Ask about current events..." class="flex-1 px-4 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] text-sm outline-none focus:border-[var(--gold)] transition-colors font-mono" aria-label="Chat input">
+          <button id="chat-send" class="w-10 h-10 bg-[var(--text)] text-[var(--bg)] flex items-center justify-center hover:bg-[var(--gold)] transition-colors" aria-label="Send message"><i class="fas fa-paper-plane text-xs"></i></button>
+        </div>
+        <div class="flex gap-2 mt-2 overflow-x-auto pb-1 scrollbar-hide">
+          <button class="quick-prompt px-3 py-1 border border-[var(--border)] text-[0.6rem] font-mono uppercase tracking-wider text-[var(--text-muted)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors whitespace-nowrap">Summarize top stories</button>
+          <button class="quick-prompt px-3 py-1 border border-[var(--border)] text-[0.6rem] font-mono uppercase tracking-wider text-[var(--text-muted)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors whitespace-nowrap">Climate updates</button>
+          <button class="quick-prompt px-3 py-1 border border-[var(--border)] text-[0.6rem] font-mono uppercase tracking-wider text-[var(--text-muted)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors whitespace-nowrap">Compare coverage</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer-main">
+  <div class="container-nx">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+      <div class="col-span-2">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="font-serif text-xl font-bold">NewsNexus</span>
+          <span class="w-1 h-1 rounded-full bg-[var(--gold)]"></span>
+          <span class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-[0.2em] uppercase">Editorial Intelligence</span>
+        </div>
+        <p class="text-sm text-[var(--text-sec)] max-w-xs leading-relaxed">
+          Pioneering the future of news consumption through AI curation, advanced data visualization, and editorial intelligence.
+        </p>
+        <div class="flex gap-2 mt-4">
+          <a href="#" class="share-btn" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="share-btn" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="#" class="share-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="share-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">API</a>
+        <a href="#">Partners</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+        <a href="#">Compliance</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+    <div class="border-t border-[var(--border)] pt-6 flex flex-col md:flex-row justify-between items-center gap-3">
+      <p class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-wider uppercase"> 2026 NewsNexus. All rights reserved.</p>
+      <p class="font-mono text-[0.55rem] text-[var(--text-muted)] tracking-wider uppercase">Designed with editorial precision.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Bottom Navigation (Mobile) -->
+<nav class="bottom-nav" aria-label="Mobile bottom navigation">
+  <a href="#editors-picks" class="active"><i class="fas fa-star"></i>Editors</a>
+  <a href="#top-stories"><i class="fas fa-newspaper"></i>Stories</a>
+  <a href="#trending"><i class="fas fa-fire"></i>Trending</a>
+  <a href="#insights"><i class="fas fa-chart-line"></i>Data</a>
+  <a href="#curator"><i class="fas fa-robot"></i>AI</a>
+</nav>
+
+<!-- Back to Top -->
+<button id="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 44 44" width="44" height="44">
+    <circle cx="22" cy="22" r="20" id="back-to-top-progress"></circle>
+  </svg>
+  <i class="fas fa-arrow-up text-xs absolute"></i>
+</button>
+
+<script>
+// ===== THREE.JS HERO: FLOWING NOISE SHADER =====
+const heroCanvas = document.getElementById('hero-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true, antialias: true });
+renderer.setSize(heroCanvas.offsetWidth, heroCanvas.offsetHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+const vertexShader = `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`;
+const fragmentShader = `
+  precision mediump float;
+  uniform float uTime;
+  uniform vec2 uResolution;
+  varying vec2 vUv;
+
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+  }
+
+  float noise(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(a, b, u.x) + (c - a)* u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+  }
+
+  void main() {
+    vec2 st = vUv * 3.0;
+    float t = uTime * 0.15;
+    float n = noise(st + t) * 0.5 + noise(st * 2.0 - t * 0.5) * 0.25 + noise(st * 4.0 + t * 0.3) * 0.125;
+    vec3 gold = vec3(0.788, 0.663, 0.431);
+    vec3 bg = vec3(0.039, 0.039, 0.039);
+    float alpha = n * 0.12;
+    gl_FragColor = vec4(gold, alpha);
+  }
+`;
+
+const uniforms = {
+  uTime: { value: 0 },
+  uResolution: { value: new THREE.Vector2(heroCanvas.offsetWidth, heroCanvas.offsetHeight) }
+};
+
+const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms, transparent: true });
+const geometry = new THREE.PlaneGeometry(2, 2);
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+
+let heroTime = 0;
+function animateHero() {
+  requestAnimationFrame(animateHero);
+  heroTime += 0.016;
+  uniforms.uTime.value = heroTime;
+  renderer.render(scene, camera);
+}
+animateHero();
+
+window.addEventListener('resize', () => {
+  renderer.setSize(heroCanvas.offsetWidth, heroCanvas.offsetHeight);
+  uniforms.uResolution.value.set(heroCanvas.offsetWidth, heroCanvas.offsetHeight);
+});
+
+// ===== KINETIC TYPOGRAPHY =====
+const heroHeadline = document.getElementById('hero-headline');
+heroHeadline.innerHTML = heroHeadline.innerHTML.split('').map(c => 
+  c === '<' || c === '>' || c === 'b' || c === 'r' || c === '/' || c === ' ' || c === ',' || c === '.' ? c : `<span class="char">${c}</span>`
+).join('');
+
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  document.querySelectorAll('.hero-headline .char').forEach(char => {
+    const rect = char.getBoundingClientRect();
+    const dx = mouseX - (rect.left + rect.width/2);
+    const dy = mouseY - (rect.top + rect.height/2);
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 120) {
+      const force = (1 - dist/120) * 8;
+      const angle = Math.atan2(dy, dx);
+      char.style.transform = `translate(${-Math.cos(angle)*force}px, ${-Math.sin(angle)*force}px)`;
+    } else {
+      char.style.transform = '';
+    }
+  });
+});
+
+// ===== DATE & TIME =====
+function updateDateTime() {
+  const now = new Date();
+  document.getElementById('hero-date').textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  document.getElementById('hero-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
+updateDateTime();
+setInterval(updateDateTime, 60000);
+
+// ===== OFFLINE DETECTION =====
+function updateOnlineStatus() {
+  const bar = document.getElementById('offline-bar');
+  if (!navigator.onLine) bar.classList.add('active');
+  else bar.classList.remove('active');
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+// ===== NEWS DATA =====
+const MOCK_STORIES = [
+  { title: "EU Carbon Border Adjustment Reaches Historic Agreement After 18 Months", category: "planet-climate", source: "ClimateWatch", desc: "Nations commit to binding targets as scientists warn of approaching tipping points in Arctic permafrost.", author: "Elena Rodriguez", readTime: 8, views: 2847 },
+  { title: "Breakthrough in Quantum Computing Achieves 1000-Qubit Milestone", category: "science-technology", source: "TechFrontier", desc: "IBM and Google researchers demonstrate error-corrected quantum supremacy on commercially relevant problems.", author: "James Park", readTime: 6, views: 1934 },
+  { title: "UN Report: Global Poverty Rates Drop to Lowest in Recorded History", category: "human-development", source: "GlobalDev", desc: "Sustainable development goals show unexpected acceleration across Sub-Saharan Africa and South Asia.", author: "Amara Okafor", readTime: 5, views: 1562 },
+  { title: "New Pandemic Preparedness Framework Adopted by 140 Countries", category: "existential-threats", source: "HealthSecurity", desc: "International treaty establishes rapid response protocols and shared vaccine manufacturing capacity.", author: "Dr. Sarah Chen", readTime: 7, views: 1203 },
+  { title: "SpaceX Starship Successfully Completes First Orbital Refueling Test", category: "science-technology", source: "SpaceDaily", desc: "Milestone brings Mars missions closer to reality with successful in-orbit propellant transfer demonstration.", author: "Marcus Webb", readTime: 4, views: 987 },
+  { title: "Amazon Deforestation Hits Four-Year Low After Satellite Monitoring Expansion", category: "planet-climate", source: "EcoMonitor", desc: "Real-time AI detection reduces illegal logging by 60% in protected zones across Brazilian rainforest.", author: "Carlos Mendez", readTime: 6, views: 856 },
+  { title: "Central Banks Coordinate Digital Currency Framework for Cross-Border Payments", category: "business", source: "FinanceToday", desc: "BIS innovation hub pilots CBDC interoperability between 12 major economies including Fed and ECB.", author: "Maria Santos", readTime: 12, views: 743 },
+  { title: "CRISPR 3.0 Enables Single-Shot Treatment for Inherited Blindness", category: "health", source: "MedTech", desc: "FDA grants breakthrough therapy designation after unprecedented Phase II trial results show 94% efficacy.", author: "Dr. A. Patel", readTime: 5, views: 692 },
+  { title: "Olympic Committee Announces Esports Pilot for 2028 Los Angeles Games", category: "sports", source: "SportsNet", desc: "Virtual cycling and sailing to debut as demonstration events alongside traditional athletics.", author: "Yuki Tanaka", readTime: 3, views: 621 },
+  { title: "NATO Expands Cyber Defense Pact Amid Rising State-Level Attacks", category: "existential-threats", source: "DefenseWeekly", desc: "Article 5 extended to cover critical infrastructure in member states following coordinated grid attacks.", author: "Robert Kim", readTime: 10, views: 534 },
+  { title: "Renewable Energy Surpasses Coal as Primary Power Source in EU", category: "planet-climate", source: "EnergyMonitor", desc: "Wind and solar now account for 42% of electricity generation across European Union member states.", author: "Lars Jensen", readTime: 5, views: 487 },
+  { title: "AI-Powered Drug Discovery Identifies Novel Antibiotic Class", category: "science-technology", source: "BioTech", desc: "Deep learning model screens 100 million compounds to find effective treatment for drug-resistant MRSA.", author: "Dr. Lisa Wang", readTime: 7, views: 412 },
+];
+
+let allStories = [];
+let bookmarks = JSON.parse(localStorage.getItem('nexus_bookmarks') || '[]');
+
+async function fetchNews(category = 'all') {
+  let stories = [];
+  try {
+    const slug = category === 'all' ? '' : `?issueSlug=${category}`;
+    const res = await fetch(`https://actually-relevant-api.onrender.com/api/stories${slug}`, { method: 'GET', headers: { 'Accept': 'application/json' } });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.stories && data.stories.length > 0) {
+        stories = data.stories.map((s, i) => ({
+          title: s.title, description: s.blurb || s.summary || 'No description available.',
+          url: s.url || '#', source: s.source || 'Actually Relevant',
+          category: s.issueArea || category, author: s.source || 'Staff Writer',
+          readTime: Math.floor(Math.random() * 10) + 3, views: Math.floor(Math.random() * 2000) + 500,
+          publishedAt: s.publishedAt || new Date().toISOString(),
+          image: `https://picsum.photos/seed/${(s.title || '').slice(0,10).replace(/\s/g,'')}/400/250`
+        }));
+      }
+    }
+  } catch (e) { console.log('API failed:', e.message); }
+
+  if (stories.length === 0) {
+    let filtered = category === 'all' ? MOCK_STORIES : MOCK_STORIES.filter(s => s.category === category || s.category.includes(category));
+    if (filtered.length < 6) filtered = [...filtered, ...MOCK_STORIES];
+    stories = filtered.slice(0, 9).map((s, i) => ({
+      ...s, publishedAt: new Date(Date.now() - i * 3600000).toISOString(),
+      image: `https://picsum.photos/seed/${s.category + i}/400/250`
+    }));
+  }
+
+  allStories = stories;
+  renderBento(stories.slice(0, 5));
+  renderTopStories(stories);
+  updateHeroCards(stories);
+  updateBreakingBanner(stories);
+}
+
+function renderBento(stories) {
+  const grid = document.getElementById('bento-grid');
+  grid.innerHTML = stories.map((s, i) => `
+    <div class="bento-item ${i === 0 ? 'lg:row-span-2' : ''}">
+      <img src="${s.image}" alt="" loading="lazy" onload="this.classList.add('loaded')">
+      <div class="overlay">
+        <div class="cat">${s.category.replace(/-/g, ' ')}</div>
+        <div class="title">${s.title}</div>
+        <div class="meta">${s.author} • ${s.readTime} min</div>
+      </div>
+    </div>
+  `).join('');
+  observeReveals();
+}
+
+function renderTopStories(stories) {
+  const grid = document.getElementById('stories-grid');
+  grid.innerHTML = stories.map((s, i) => `
+    <article class="ed-card tilt-card reveal reveal-d${Math.min(i, 4)}">
+      <div class="tilt-inner">
+        <div class="img-wrap">
+          <div class="skeleton-img"></div>
+          <img src="${s.image}" alt="" class="img-loading" loading="lazy" onload="this.classList.add('img-loaded'); this.classList.remove('img-loading')" onerror="this.src='https://picsum.photos/400/250'">
+        </div>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="cat">${s.category.replace(/-/g, ' ')}</div>
+            <button class="share-btn ${bookmarks.includes(s.title) ? 'active' : ''}" onclick="toggleBookmark('${s.title.replace(/'/g, "\'")}')" aria-label="Bookmark">
+              <i class="fas fa-bookmark"></i>
+            </button>
+          </div>
+          <h3 class="title text-base mb-2">${s.title}</h3>
+          <p class="desc line-clamp-2 mb-3">${s.description}</p>
+          <div class="flex items-center justify-between">
+            <div class="meta">${s.author} • ${timeAgo(s.publishedAt)}</div>
+            <div class="share-group">
+              <button class="share-btn" onclick="shareStory('${s.title.replace(/'/g, "\'")}', '${s.url}')" aria-label="Share"><i class="fas fa-share-alt"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  `).join('');
+  initTiltCards();
+  observeReveals();
+}
+
+function initTiltCards() {
+  if (window.matchMedia('(hover: none)').matches) return;
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    const inner = card.querySelector('.tilt-inner');
+    if (!inner) return;
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      inner.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      inner.style.transform = '';
+    });
+  });
+}
+
+function updateHeroCards(stories) {
+  const cats = ['planet-climate', 'science-technology', 'human-development'];
+  cats.forEach((cat, i) => {
+    const s = stories.find(s => s.category === cat) || stories[i];
+    if (s) {
+      const el = document.getElementById(`hero-card-title-${i+1}`);
+      if (el) el.textContent = s.title;
+    }
+  });
+}
+
+function updateBreakingBanner(stories) {
+  const track = document.getElementById('breaking-track');
+  const items = stories.slice(0, 6).map(s => `<span class="item">BREAKING: ${s.title}</span>`).join('');
+  track.innerHTML = items + items;
+}
+
+function timeAgo(date) {
+  const d = new Date(date);
+  const now = new Date();
+  const sec = Math.floor((now - d) / 1000);
+  if (sec < 60) return 'Just now';
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  return `${Math.floor(hr / 24)}d ago`;
+}
+
+function toggleBookmark(title) {
+  const idx = bookmarks.indexOf(title);
+  if (idx > -1) bookmarks.splice(idx, 1); else bookmarks.push(title);
+  localStorage.setItem('nexus_bookmarks', JSON.stringify(bookmarks));
+  updateBookmarkCount();
+  renderTopStories(allStories);
+}
+
+function updateBookmarkCount() {
+  const count = document.getElementById('bookmark-count');
+  if (bookmarks.length > 0) { count.textContent = bookmarks.length; count.classList.remove('hidden'); }
+  else count.classList.add('hidden');
+}
+
+async function shareStory(title, url) {
+  if (navigator.share) {
+    try { await navigator.share({ title, url: url || window.location.href, text: 'Check out this story on NewsNexus' }); }
+    catch (e) { console.log('Share cancelled'); }
+  } else {
+    navigator.clipboard.writeText(url || window.location.href);
+    alert('Link copied to clipboard');
+  }
+}
+
+// ===== CATEGORIES =====
+document.querySelectorAll('.cat-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    fetchNews(btn.dataset.category);
+  });
+});
+
+// ===== CHARTS =====
+function initCharts() {
+  const hmData = [
+    { name: "Politics", value: 85 }, { name: "Climate", value: 72 }, { name: "Tech", value: 68 },
+    { name: "Health", value: 55 }, { name: "Economy", value: 48 }, { name: "Sports", value: 42 },
+    { name: "Science", value: 60 }, { name: "Culture", value: 35 }, { name: "Security", value: 50 }
+  ];
+  const hm = d3.select("#heatmap-viz");
+  hm.selectAll("*").remove();
+  const w = hm.node().getBoundingClientRect().width;
+  const h = 250;
+  const cols = window.innerWidth < 640 ? 2 : 3;
+  const size = Math.min(w / cols - 8, 90);
+  const svg = hm.append("svg").attr("width", w).attr("height", h);
+  hmData.forEach((d, i) => {
+    const x = (i % cols) * (size + 8) + (w - cols * (size + 8) + 8) / 2;
+    const y = Math.floor(i / cols) * (size + 8) + 10;
+    const op = 0.15 + (d.value / 100) * 0.85;
+    const g = svg.append("g").attr("class", "heatmap-cell");
+    g.append("rect").attr("x", x).attr("y", y).attr("width", size).attr("height", size)
+      .attr("fill", "#c9a96e").attr("opacity", op).attr("stroke", "#c9a96e").attr("stroke-width", 1).attr("stroke-opacity", 0.3).attr("rx", 2);
+    g.append("text").attr("x", x + size/2).attr("y", y + size/2 - 6).attr("text-anchor", "middle")
+      .attr("fill", isDark ? "#fff" : "#1a1a1a").attr("font-size", "12px").attr("font-weight", "600").attr("font-family", "Inter").text(d.name);
+    g.append("text").attr("x", x + size/2).attr("y", y + size/2 + 12).attr("text-anchor", "middle")
+      .attr("fill", isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.5)").attr("font-size", "10px").attr("font-family", "Inter").text(d.value + "%");
+  });
+
+  const ctx = document.getElementById('sentiment-chart').getContext('2d');
+  if (window.sentimentChart) window.sentimentChart.destroy();
+  window.sentimentChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Optimism', 'Concern', 'Neutrality', 'Urgency', 'Curiosity', 'Skepticism', 'Hope', 'Anger'],
+      datasets: [{
+        label: 'Today', data: [62, 45, 38, 55, 72, 30, 58, 22],
+        backgroundColor: 'rgba(201,169,110,0.12)', borderColor: 'rgba(201,169,110,0.8)', borderWidth: 2,
+        pointBackgroundColor: '#c9a96e', pointBorderColor: '#fff', pointRadius: 3
+      }, {
+        label: 'Yesterday', data: [55, 50, 40, 48, 65, 35, 50, 28],
+        backgroundColor: 'rgba(138,138,138,0.05)', borderColor: 'rgba(138,138,138,0.4)', borderWidth: 2,
+        borderDash: [5, 5], pointRadius: 0
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: isDark ? '#a0a0a0' : '#4a4a4a', font: { family: 'Inter', size: 11 }, boxWidth: 12 } }
+      },
+      scales: {
+        r: {
+          beginAtZero: true, max: 100, ticks: { display: false, backdropColor: 'transparent' },
+          grid: { color: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' },
+          angleLines: { color: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' },
+          pointLabels: { color: isDark ? '#a0a0a0' : '#4a4a4a', font: { family: 'Inter', size: 10 } }
         }
+      }
+    }
+  });
+}
 
-        // Initialize news feed on page load
-        document.addEventListener('DOMContentLoaded', () => fetchNews());
+// ===== TIMELINE =====
+function initTimeline() {
+  const data = [
+    { date: "2026-06-13", event: "EU Carbon Border Tax Approved", cat: "climate" },
+    { date: "2026-06-10", event: "Quantum 1000-Qubit Milestone", cat: "tech" },
+    { date: "2026-06-07", event: "NATO Cyber Defense Expansion", cat: "security" },
+    { date: "2026-06-04", event: "CRISPR 3.0 Blindness Treatment", cat: "health" },
+    { date: "2026-06-01", event: "CBDC Cross-Border Pilot Launch", cat: "business" },
+    { date: "2026-05-28", event: "Amazon Deforestation 4-Year Low", cat: "climate" },
+    { date: "2026-05-24", event: "Starship Orbital Refueling Success", cat: "tech" },
+    { date: "2026-05-20", event: "UN Poverty Report Record Low", cat: "development" }
+  ];
+  const container = d3.select("#timeline-viz");
+  container.selectAll("*").remove();
+  const w = container.node().getBoundingClientRect().width;
+  const h = window.innerWidth < 768 ? 350 : 400;
+  const m = { top: 30, right: 20, bottom: 50, left: 20 };
+  const svg = container.append("svg").attr("width", w).attr("height", h);
+  const parse = d3.timeParse("%Y-%m-%d");
+  const dates = data.map(d => parse(d.date));
+  const x = d3.scaleTime().domain(d3.extent(dates)).range([m.left, w - m.right]);
+  const y = d3.scalePoint().domain(data.map((d, i) => i)).range([h - m.bottom, m.top]);
+  const defs = svg.append("defs");
+  const grad = defs.append("linearGradient").attr("id", "tl-grad").attr("x1", "0%").attr("y1", "0%").attr("x2", "100%").attr("y2", "0%");
+  grad.append("stop").attr("offset", "0%").attr("stop-color", "#c9a96e");
+  grad.append("stop").attr("offset", "100%").attr("stop-color", "#8a6f3a");
+  const line = d3.line().x(d => x(parse(d.date))).y((d, i) => y(i)).curve(d3.curveMonotoneX);
+  svg.append("path").datum(data).attr("fill", "none").attr("stroke", "url(#tl-grad)").attr("stroke-width", 2).attr("d", line).attr("opacity", 0.6);
+  const axis = d3.axisBottom(x).ticks(window.innerWidth < 768 ? 3 : 5).tickFormat(d3.timeFormat("%b %d"));
+  svg.append("g").attr("transform", `translate(0, ${h - m.bottom + 15})`).call(axis)
+    .selectAll("text").attr("fill", isDark ? '#a0a0a0' : '#4a4a4a').attr("font-size", "10px").attr("font-family", "Inter");
+  svg.selectAll(".domain, .tick line").attr("stroke", isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)");
+  const colors = { climate: "#c9a96e", tech: "#8a8a8a", security: "#4a4a4a", health: "#c0392b", business: "#27ae60", development: "#c9a96e" };
+  data.forEach((d, i) => {
+    const g = svg.append("g").attr("class", "timeline-node");
+    const cx = x(parse(d.date));
+    const cy = y(i);
+    g.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 5).attr("fill", colors[d.cat] || "#c9a96e").attr("stroke", isDark ? "#0a0a0a" : "#fafafa").attr("stroke-width", 2);
+    g.append("text").attr("x", cx).attr("y", cy - 14).attr("text-anchor", "middle").attr("fill", isDark ? "#e8e8e8" : "#1a1a1a").attr("font-size", "11px").attr("font-weight", "600").attr("font-family", "Inter").text(d.event);
+    g.append("text").attr("x", cx).attr("y", cy + 20).attr("text-anchor", "middle").attr("fill", "#8a8a8a").attr("font-size", "9px").attr("font-family", "IBM Plex Mono").text(d.cat);
+  });
+}
 
-        // Category buttons event listeners
-        document.querySelectorAll('[data-category]').forEach(button => {
-            button.addEventListener('click', (e) => {
-                fetchNews(e.target.dataset.category);
-            });
-        });
+// ===== PODCAST WAVE =====
+function initPodcastWaves() {
+  ['podcast-wave', 'podcast-wave-2'].forEach(id => {
+    const container = document.getElementById(id);
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < 40; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.height = (Math.random() * 24 + 4) + 'px';
+      if (Math.random() > 0.5) bar.classList.add('active');
+      container.appendChild(bar);
+    }
+  });
+}
 
-       
+// ===== POLL =====
+document.querySelectorAll('#poll-options .poll-option, #poll-options-2 .poll-option').forEach(opt => {
+  opt.addEventListener('click', function() {
+    const parent = this.parentElement;
+    parent.querySelectorAll('.poll-option').forEach(o => {
+      o.classList.remove('selected');
+      o.querySelector('.poll-radio i').style.opacity = '0';
+      const fill = o.querySelector('.poll-bar-fill');
+      const pct = o.querySelector('.poll-pct');
+      if (fill) fill.style.width = '0%';
+      if (pct) pct.style.opacity = '0';
+    });
+    this.classList.add('selected');
+    this.querySelector('.poll-radio i').style.opacity = '1';
+    const fill = this.querySelector('.poll-bar-fill');
+    const pct = this.querySelector('.poll-pct');
+    const targetPct = pct.textContent;
+    if (fill) {
+      fill.style.width = targetPct;
+      fill.parentElement.style.flex = '1';
+    }
+    if (pct) pct.style.opacity = '1';
+  });
+});
 
-        // Initialize Charts
-        function initCharts() {
-            // Trending Topics Heatmap
-            const topicData = [
-                { name: "Politics", value: 80 },
-                { name: "Technology", value: 65 },
-                { name: "Environment", value: 50 },
-                { name: "Health", value: 75 },
-                { name: "Economy", value: 60 },
-                { name: "Sports", value: 40 },
-                { name: "Entertainment", value: 55 },
-                { name: "Science", value: 70 }
-            ];
+// ===== AI CHAT =====
+const chatMessages = document.getElementById('chat-messages');
+const chatInput = document.getElementById('chat-input');
+const chatSend = document.getElementById('chat-send');
 
-            const heatmap = d3.select("#topic-heatmap")
-                .append("svg")
-                .attr("width", 300)
-                .attr("height", 300);
+const responses = {
+  "hello": "Hello. I'm your NewsNexus curator. I can summarize stories, compare perspectives, or surface hidden connections. What are you curious about?",
+  "hi": "Greetings. Ready to explore the information landscape together?",
+  "summary": "Today's top narrative threads: (1) Climate policy momentum ahead of COP31, (2) Quantum computing reaching commercial viability, (3) Geopolitical realignment in the Indo-Pacific. Shall I expand on any?",
+  "summarize": "Today's top narrative threads: (1) Climate policy momentum ahead of COP31, (2) Quantum computing reaching commercial viability, (3) Geopolitical realignment in the Indo-Pacific. Shall I expand on any?",
+  "climate": "Climate coverage today is dominated by the EU's accelerated carbon border adjustment mechanism and a new Nature study on Amazon tipping points. The sentiment is 72% urgent, 18% optimistic. Would you like source comparison?",
+  "tech": "Technology stories center on OpenAI's new reasoning model, TSMC's 2nm chip yields, and a major cybersecurity framework update. The tech sector sentiment is notably optimistic at +34 points above baseline.",
+  "business": "Markets are reacting to central bank coordination on digital currencies. The BIS pilot involves 12 economies. Financial sentiment is cautious-optimistic with high volatility indicators.",
+  "health": "Medical news is led by the CRISPR 3.0 blindness treatment breakthrough and new longevity research from the Buck Institute. Health sentiment is strongly optimistic (+45 points).",
+  "sports": "Olympic esports pilot announcement is generating cross-generational discourse. Traditional sports sentiment is stable; esports coverage shows high curiosity metrics.",
+  "compare": "I can compare how different outlets frame the same story. Try asking 'compare climate coverage' or 'compare tech news' for a perspective analysis.",
+  "bias": "Bias detection is active. Our prism analysis shows that environmental outlets prioritize planetary outcomes (72% weight), while financial outlets prioritize market stability (68% weight). Cross-referencing reduces narrative blind spots by approximately 40%.",
+  "trending": "Trending topics by volume: (1) Climate policy (2) Quantum computing (3) CBDC frameworks (4) CRISPR therapies (5) Indo-Pacific security. Trend velocity is highest in quantum computing (+340% week-over-week).",
+  "recommend": "Based on your interest patterns, I recommend exploring the intersection of climate adaptation and urban planning — a rapidly growing coverage area with high cross-domain significance.",
+  "thanks": "You're welcome. The news ecosystem never sleeps, and neither do I. Return anytime for synthesis, comparison, or discovery.",
+  "bye": "Farewell. I'll continue monitoring the feeds. Your next briefing will be ready when you return."
+};
 
-            const colorScale = d3.scaleLinear()
-                .domain([0, 100])
-                .range(["#FFF5F0", "#FF6B6B"]);
+function addChatMessage(sender, text) {
+  const div = document.createElement('div');
+  div.className = 'flex gap-2';
+  if (sender === 'ai') {
+    div.innerHTML = `
+      <div class="w-7 h-7 bg-[var(--bg-tert)] border border-[var(--gold)] flex items-center justify-center text-[var(--gold)] text-xs flex-shrink-0"><i class="fas fa-robot"></i></div>
+      <div class="chat-bubble ai">${text}</div>
+    `;
+  } else {
+    div.innerHTML = `<div class="ml-auto chat-bubble user">${text}</div>`;
+  }
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 
-            heatmap.selectAll("rect")
-                .data(topicData)
-                .enter()
-                .append("rect")
-                .attr("x", (d, i) => (i % 3) * 100)
-                .attr("y", (d, i) => Math.floor(i / 3) * 100)
-                .attr("width", 95)
-                .attr("height", 95)
-                .attr("fill", d => colorScale(d.value))
-                .attr("stroke", "#333")
-                .attr("stroke-width", 2);
+function getAIResponse(input) {
+  const lower = input.toLowerCase();
+  for (const [key, value] of Object.entries(responses)) {
+    if (lower.includes(key)) return value;
+  }
+  return `I've analyzed your query against our current feed. While I don't have a pre-formed narrative on "${input}", I can synthesize from 12 relevant articles. Would you like a summary, source comparison, or timeline of related events?`;
+}
 
-            heatmap.selectAll("text")
-                .data(topicData)
-                .enter()
-                .append("text")
-                .attr("x", (d, i) => (i % 3) * 100 + 47.5)
-                .attr("y", (d, i) => Math.floor(i / 3) * 100 + 50)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "middle")
-                .text(d => d.name)
-                .attr("fill", "#333")
-                .attr("font-size", "12px");
+chatSend.addEventListener('click', () => {
+  const text = chatInput.value.trim();
+  if (!text) return;
+  addChatMessage('user', text);
+  chatInput.value = '';
+  setTimeout(() => addChatMessage('ai', getAIResponse(text)), 600 + Math.random() * 400);
+});
+chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') chatSend.click(); });
+document.querySelectorAll('.quick-prompt').forEach(btn => {
+  btn.addEventListener('click', () => { chatInput.value = btn.textContent; chatSend.click(); });
+});
 
-            // Sentiment Analysis Radar Chart
-            const sentimentCtx = document.getElementById('sentimentRadarChart').getContext('2d');
-            new Chart(sentimentCtx, {
-                type: 'radar',
-                data: {
-                    labels: ['Positive', 'Negative', 'Neutral', 'Fear', 'Joy', 'Sadness', 'Anger', 'Surprise'],
-                    datasets: [{
-                        label: 'Sentiment Analysis',
-                        data: [65, 30, 45, 20, 55, 25, 15, 40],
-                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
-                        borderColor: 'rgba(255, 107, 107, 1)',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'News Sentiment Radar'
-                        }
-                    },
-                    scale: {
-                        ticks: {
-                            beginAtZero: true,
-                            max: 100
-                        }
-                    }
-                }
-            });
-        }
+// ===== VOICE SEARCH =====
+const voiceBtn = document.getElementById('voice-trigger');
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onstart = () => voiceBtn.classList.add('recording');
+  recognition.onend = () => voiceBtn.classList.remove('recording');
+  recognition.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    chatInput.value = transcript;
+    chatSend.click();
+  };
+  voiceBtn.addEventListener('click', () => {
+    if (voiceBtn.classList.contains('recording')) recognition.stop();
+    else recognition.start();
+  });
+} else {
+  voiceBtn.style.display = 'none';
+}
 
-        // Initialize charts on page load
-        document.addEventListener('DOMContentLoaded', initCharts);
+// ===== THEME TOGGLE =====
+let isDark = false;
+const themeToggle = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+const html = document.documentElement;
 
-        // AI Assistant functionality
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const sendMessage = document.getElementById('send-message');
+themeToggle.addEventListener('click', () => {
+  isDark = !isDark;
+  if (isDark) {
+    html.classList.add('dark');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  } else {
+    html.classList.remove('dark');
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+  }
+  setTimeout(() => { initCharts(); initTimeline(); }, 100);
+});
 
-        function addMessageToChat(sender, message) {
-            const messageElement = document.createElement('div');
-            messageElement.className = `mb-2 ${sender === 'user' ? 'text-right' : 'text-left'}`;
-            messageElement.innerHTML = `
-                <span class="inline-block px-4 py-2 rounded-lg ${sender === 'user' ? 'bg-primary-color text-white' : 'bg-gray-200 text-black'}">
-                    ${message}
-                </span>
-            `;
-            chatContainer.appendChild(messageElement);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) themeToggle.click();
 
-        function generateAIResponse(userMessage) {
-            // This is a placeholder for more sophisticated NLP/AI response generation
-            const responses = {
-                "hello": "Greetings! How may I assist you with the latest news and current events?",
-                "latest news": "I'm currently analyzing global news streams. Which area of interest shall we explore: technology, politics, environment, or something else?",
-                "trending": "Based on our real-time data, the most discussed topics are AI advancements, climate policy shifts, and breakthroughs in quantum computing. Would you like a deep dive into any of these?",
-                "recommend": "Certainly! Based on global traction, I'd suggest looking into the recent developments in sustainable energy technologies. Would you like a curated list of articles on this topic?",
-                "thanks": "You're welcome! Remember, I'm here 24/7 to help you navigate the ever-changing landscape of news. Feel free to return anytime.",
-                "bye": "Farewell for now. The world of news never sleeps, and neither do I. I'll be here when you need your next update!"
-            };
+// ===== COMMAND PALETTE =====
+const cmdPalette = document.getElementById('cmd-palette');
+const cmdInput = document.getElementById('cmd-input');
+const cmdResults = document.getElementById('cmd-results');
 
-            const lowercaseMessage = userMessage.toLowerCase();
-            for (const [key, value] of Object.entries(responses)) {
-                if (lowercaseMessage.includes(key)) {
-                    return value;
-                }
-            }
+const commands = [
+  { icon: 'fa-newspaper', text: 'Go to Top Stories', action: () => document.getElementById('top-stories').scrollIntoView({behavior:'smooth'}), kbd: 'G S' },
+  { icon: 'fa-star', text: "Go to Editor's Picks", action: () => document.getElementById('editors-picks').scrollIntoView({behavior:'smooth'}), kbd: 'G E' },
+  { icon: 'fa-chart-line', text: 'Go to Insights', action: () => document.getElementById('insights').scrollIntoView({behavior:'smooth'}), kbd: 'G I' },
+  { icon: 'fa-clock', text: 'Go to Timeline', action: () => document.getElementById('timeline').scrollIntoView({behavior:'smooth'}), kbd: 'G T' },
+  { icon: 'fa-balance-scale', text: 'Go to Perspectives', action: () => document.getElementById('perspectives').scrollIntoView({behavior:'smooth'}), kbd: 'G P' },
+  { icon: 'fa-moon', text: 'Toggle Dark Mode', action: () => themeToggle.click(), kbd: 'Ctrl D' },
+  { icon: 'fa-search', text: 'Open Search', action: () => { cmdPalette.classList.remove('active'); document.getElementById('search-overlay').classList.add('active'); document.getElementById('search-input').focus(); }, kbd: 'Ctrl K' },
+  { icon: 'fa-bookmark', text: 'View Bookmarks', action: () => alert('Bookmarks: ' + (bookmarks.length ? bookmarks.join(', ') : 'None saved')), kbd: 'Ctrl B' },
+];
 
-            return "Interesting query. I'm processing vast amounts of data to provide you with the most relevant and accurate information. Could you please provide more context or specify your area of interest?";
-        }
+function showCommands(filter = '') {
+  const filtered = commands.filter(c => c.text.toLowerCase().includes(filter.toLowerCase()));
+  cmdResults.innerHTML = filtered.map(c => `
+    <div class="cmd-item" onclick="(${c.action.toString()})()">
+      <i class="fas ${c.icon} cmd-icon"></i>
+      <span class="cmd-text">${c.text}</span>
+      <span class="cmd-kbd">${c.kbd}</span>
+    </div>
+  `).join('');
+}
 
-        sendMessage.addEventListener('click', () => {
-            const message = userInput.value.trim();
-            if (message !== '') {
-                addMessageToChat('user', message);
-                userInput.value = '';
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    cmdPalette.classList.toggle('active');
+    if (cmdPalette.classList.contains('active')) { cmdInput.value = ''; showCommands(); cmdInput.focus(); }
+  }
+  if (e.key === 'Escape') {
+    cmdPalette.classList.remove('active');
+    document.getElementById('search-overlay').classList.remove('active');
+  }
+});
+cmdInput.addEventListener('input', (e) => showCommands(e.target.value));
+cmdPalette.addEventListener('click', (e) => { if (e.target === cmdPalette) cmdPalette.classList.remove('active'); });
 
-                // Simulate AI response
-                setTimeout(() => {
-                    const aiResponse = generateAIResponse(message);
-                    addMessageToChat('ai', aiResponse);
-                }, 1000);
-            }
-        });
+// ===== SEARCH OVERLAY =====
+document.getElementById('search-trigger').addEventListener('click', () => {
+  document.getElementById('search-overlay').classList.add('active');
+  document.getElementById('search-input').focus();
+});
+document.getElementById('search-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('search-overlay')) document.getElementById('search-overlay').classList.remove('active');
+});
 
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage.click();
-            }
-        });
+// ===== MOBILE MENU =====
+document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.add('active');
+});
+document.getElementById('mobile-close').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.remove('active');
+});
+document.querySelectorAll('.mobile-link').forEach(link => {
+  link.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('active'));
+});
 
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
+// ===== NAV SCROLL =====
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 80) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark');
-            if (body.classList.contains('dark')) {
-                document.documentElement.style.setProperty('--background-color', '#1a1a1a');
-                document.documentElement.style.setProperty('--text-color', '#f0f0f0');
-            } else {
-                document.documentElement.style.setProperty('--background-color', '#F7F7F7');
-                document.documentElement.style.setProperty('--text-color', '#333333');
-            }
-        });
+// ===== READING PROGRESS =====
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('read-progress').style.width = progress + '%';
 
-        // Initialize the Interactive Timeline
-        function initTimeline() {
-            const timelineData = [
-                { date: "2024-01-15", event: "Major tech company announces breakthrough in quantum computing" },
-                { date: "2024-02-03", event: "Global climate summit concludes with new emissions targets" },
-                { date: "2024-03-12", event: "Revolutionary cancer treatment receives FDA approval" },
-                { date: "2024-04-20", event: "First commercial space hotel opens for business" },
-                { date: "2024-05-08", event: "Artificial General Intelligence milestone achieved" }
-            ];
+  // Back to top progress circle
+  const circle = document.getElementById('back-to-top-progress');
+  if (circle) {
+    const circumference = 2 * Math.PI * 20;
+    const offset = circumference - (progress / 100) * circumference;
+    circle.style.strokeDashoffset = offset;
+  }
 
-            const timelineContainer = d3.select("#timeline-container");
-            const svgWidth = timelineContainer.node().getBoundingClientRect().width;
-            const svgHeight = 350;
+  // Show/hide back to top
+  const btn = document.getElementById('back-to-top');
+  if (scrollTop > 500) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
 
-            const svg = timelineContainer.append("svg")
-                .attr("width", svgWidth)
-                .attr("height", svgHeight);
+document.getElementById('back-to-top').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
-            const timeScale = d3.scaleTime()
-                .domain(d3.extent(timelineData, d => new Date(d.date)))
-                .range([50, svgWidth - 50]);
+// ===== SECTION DOTS =====
+const sections = ['hero', 'editors-picks', 'top-stories', 'trending', 'insights', 'timeline', 'perspectives', 'opinion', 'podcast', 'authors'];
+const dots = document.querySelectorAll('.sec-dots a');
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      dots.forEach(d => d.classList.toggle('active', d.getAttribute('href') === `#${id}`));
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) sectionObserver.observe(el);
+});
 
-            const axis = d3.axisBottom(timeScale);
+// ===== REVEAL OBSERVER =====
+function observeReveals() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
 
-            svg.append("g")
-                .attr("transform", `translate(0, ${svgHeight - 30})`)
-                .call(axis);
+// ===== STATS COUNTER =====
+function animateCounter(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let cur = 0;
+  const inc = target / 60;
+  const t = setInterval(() => {
+    cur += inc;
+    if (cur >= target) { cur = target; clearInterval(t); }
+    el.textContent = Math.floor(cur).toLocaleString();
+  }, 16);
+}
 
-            svg.selectAll("circle")
-                .data(timelineData)
-                .enter()
-                .append("circle")
-                .attr("cx", d => timeScale(new Date(d.date)))
-                .attr("cy", svgHeight - 30)
-                .attr("r", 8)
-                .attr("fill", "var(--primary-color)");
+// ===== NEWSLETTER =====
+document.getElementById('newsletter-btn').addEventListener('click', function() {
+  this.textContent = 'Subscribed!';
+  this.style.background = 'var(--gold)';
+  this.style.color = 'var(--text-inverse)';
+  setTimeout(() => {
+    this.textContent = 'Subscribe';
+    this.style.background = '';
+    this.style.color = '';
+  }, 3000);
+});
 
-            svg.selectAll("text")
-                .data(timelineData)
-                .enter()
-                .append("text")
-                .attr("x", d => timeScale(new Date(d.date)))
-                .attr("y", (d, i) => svgHeight - 50 - (i % 2) * 100)
-                .attr("text-anchor", "middle")
-                .text(d => d.event)
-                .attr("fill", "var(--text-color)")
-                .attr("font-size", "12px");
-        }
+// ===== PODCAST PLAY =====
+document.getElementById('podcast-play-btn').addEventListener('click', function() {
+  const icon = this.querySelector('i');
+  if (icon.classList.contains('fa-play')) {
+    icon.classList.remove('fa-play');
+    icon.classList.add('fa-pause');
+    document.querySelectorAll('#podcast-wave .bar').forEach(bar => bar.classList.add('active'));
+  } else {
+    icon.classList.remove('fa-pause');
+    icon.classList.add('fa-play');
+    document.querySelectorAll('#podcast-wave .bar').forEach((bar, i) => { if (i % 2) bar.classList.remove('active'); });
+  }
+});
 
-        // Initialize timeline on page load
-        document.addEventListener('DOMContentLoaded', initTimeline);
+// ===== BOTTOM NAV ACTIVE STATE =====
+const bottomNavLinks = document.querySelectorAll('.bottom-nav a');
+const bottomNavObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      bottomNavLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+      });
+    }
+  });
+}, { threshold: 0.2 });
+['editors-picks', 'top-stories', 'trending', 'insights', 'curator'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) bottomNavObserver.observe(el);
+});
 
-        // Initialize the News Comparison section
-        function initNewsComparison() {
-            // This is a placeholder. In a real application, you'd fetch actual news articles for comparison.
-            const sourceA = {
-                title: "New Energy Policy Announced",
-                content: "The government today unveiled a comprehensive new energy policy aimed at reducing carbon emissions by 50% within the next decade. The plan includes significant investments in renewable energy sources and a gradual phase-out of fossil fuels."
-            };
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  fetchNews('all');
+  initCharts();
+  initTimeline();
+  initPodcastWaves();
+  observeReveals();
+  updateBookmarkCount();
 
-            const sourceB = {
-                title: "Controversial Energy Plan Revealed",
-                content: "In a move that has sparked debate, the administration has proposed a new energy strategy. Critics argue that the ambitious targets for emission reduction could lead to job losses in traditional energy sectors and potentially higher energy costs for consumers."
-            };
+  const statsObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter('stat-articles', 1247);
+        animateCounter('stat-sources', 342);
+        animateCounter('stat-countries', 68);
+        statsObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  const statsEl = document.getElementById('stat-articles');
+  if (statsEl) statsObs.observe(statsEl.parentElement);
+});
 
-            document.getElementById('source-a-content').innerHTML = `
-                <h4 class="text-xl font-bold mb-2">${sourceA.title}</h4>
-                <p>${sourceA.content}</p>
-            `;
-
-            document.getElementById('source-b-content').innerHTML = `
-                <h4 class="text-xl font-bold mb-2">${sourceB.title}</h4>
-                <p>${sourceB.content}</p>
-            `;
-
-            // Simple sentiment analysis (this would be much more sophisticated in a real application)
-            const sentimentAnalysis = "The two sources present differing perspectives on the new energy policy. Source A focuses on the environmental benefits and long-term goals, while Source B highlights potential economic challenges and controversies. This demonstrates the complex nature of policy reporting and the importance of considering multiple viewpoints.";
-
-            document.getElementById('analysis-content').innerHTML = sentimentAnalysis;
-        }
-
-        // Initialize news comparison on page load
-        document.addEventListener('DOMContentLoaded', initNewsComparison);
-
-        // Particle background
-        function initParticleBackground() {
-            const canvas = document.createElement('canvas');
-            canvas.id = 'particle-background';
-            document.body.prepend(canvas);
-
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            let particlesArray;
-
-            // Particle class
-            class Particle {
-                constructor(x, y) {
-                    this.x = x;
-                    this.y = y;
-                    this.size = Math.random() * 5 + 1;
-                    this.speedX = Math.random() * 3 - 1.5;
-                    this.speedY = Math.random() * 3 - 1.5;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.size > 0.2) this.size -= 0.1;
-                }
-                draw() {
-                    ctx.fillStyle = 'rgba(255, 107, 107, 0.8)';
-                    ctx.strokeStyle = 'rgba(255, 107, 107, 0.8)';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.closePath();
-                    ctx.fill();
-                }
-            }
-
-            // Create particle array
-            function init() {
-                particlesArray = [];
-                let numberOfParticles = (canvas.height * canvas.width) / 9000;
-                for (let i = 0; i < numberOfParticles; i++) {
-                    let x = Math.random() * canvas.width;
-                    let y = Math.random() * canvas.height;
-                    particlesArray.push(new Particle(x, y));
-                }
-            }
-
-            // Animation loop
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update();
-                    particlesArray[i].draw();
-                    if (particlesArray[i].size <= 0.2) {
-                        particlesArray.splice(i, 1);
-                        i--;
-                    }
-                }
-                requestAnimationFrame(animate);
-            }
-
-            // Resize event
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                init();
-            });
-
-            init();
-            animate();
-        }
-
-        // Initialize particle background on page load
-        document.addEventListener('DOMContentLoaded', initParticleBackground);
-
-        // Smooth scrolling for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Dynamic content loading on scroll
-        function loadContentOnScroll() {
-            const sections = document.querySelectorAll('section');
-            const options = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, options);
-
-            sections.forEach(section => {
-                observer.observe(section);
-            });
-        }
-
-        // Initialize dynamic content loading
-        document.addEventListener('DOMContentLoaded', loadContentOnScroll);
-
-        // Initialize the application
-        function initApp() {
-            fetchNews();
-            initGlobe();
-            initCharts();
-            initTimeline();
-            initNewsComparison();
-            initParticleBackground();
-        }
-
-        // Run the application
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => { initCharts(); initTimeline(); }, 250);
+});
+</script>
 </body>
 </html>
