@@ -39,25 +39,50 @@ tailwind.config = {
 <style>
 /* ===== CSS VARIABLES & MOBILE-FIRST BASE ===== */
 :root {
-  --bg: #fafafa; --bg-sec: #ffffff; --bg-tert: #f0f0f0; --bg-glass: rgba(255,255,255,0.85);
-  --text: #1a1a1a; --text-sec: #4a4a4a; --text-muted: #8a8a8a; --text-inverse: #fafafa;
-  --border: #e0e0e0; --border-light: #f0f0f0;
-  --gold: #c9a96e; --gold-dim: #b08d4b; --gold-glow: rgba(201,169,110,0.15);
-  --red: #c0392b; --green: #27ae60;
-  --radius: 0px; --radius-sm: 0px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.04); --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --bg: #EDE8E3;
+  --bg-sec: #F5F2EE;
+  --bg-tert: #DDD5CC;
+  --bg-glass: rgba(245,242,238,0.85);
+  --text: #1A1612;
+  --text-sec: #5A5048;
+  --text-muted: #A89E94;
+  --text-inverse: #F5F2EE;
+  --border: #C8C0B8;
+  --border-light: #DDD5CC;
+  --gold: #2E8B57;
+  --gold-dim: #1A5C3A;
+  --gold-glow: rgba(46,139,87,0.18);
+  --red: #C75B39;
+  --green: #4CAF7C;
+  --radius: 0px;
+  --radius-sm: 0px;
+  --shadow: 0 1px 3px rgba(26,22,18,0.06);
+  --shadow-lg: 0 8px 32px rgba(26,22,18,0.10);
   --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   --header-h: 56px;
   --touch-min: 44px;
 }
 .dark {
-  --bg: #0a0a0a; --bg-sec: #111111; --bg-tert: #1a1a1a; --bg-glass: rgba(17,17,17,0.92);
-  --text: #e8e8e8; --text-sec: #a0a0a0; --text-muted: #6a6a6a; --text-inverse: #1a1a1a;
-  --border: #2a2a2a; --border-light: #1a1a1a;
-  --gold-glow: rgba(201,169,110,0.08);
-  --shadow: 0 1px 3px rgba(0,0,0,0.2); --shadow-lg: 0 8px 32px rgba(0,0,0,0.3);
+  --bg: #1A1612;
+  --bg-sec: #242018;
+  --bg-tert: #2E2820;
+  --bg-glass: rgba(36,32,24,0.92);
+  --text: #EDE8E3;
+  --text-sec: #A89E94;
+  --text-muted: #7A7068;
+  --text-inverse: #1A1612;
+  --border: #3A342C;
+  --border-light: #2E2820;
+  --gold: #4CAF7C;
+  --gold-dim: #7DD4A0;
+  --gold-glow: rgba(76,175,124,0.12);
+  --red: #E07B5B;
+  --green: #7DD4A0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
